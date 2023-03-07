@@ -10,9 +10,9 @@ public class Staff {
 	private int staff_no;
 	private String staff_name;
 	private String jumin_no;
-	private String school_code;
-	private String department_code;
-	private List<String> skill_code;
+	private String school_name;
+	private String department_name;
+	private List<String> skill_name;
 	private String graduate_day;
 	
 	

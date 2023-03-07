@@ -4,9 +4,50 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="staffMapper">
+	
+	
+	<insert id="insertStaff" parameterType="staff">
+		INSERT
+		  INTO
+		  	   STAFF
+		       (
+		        STAFF_NO
+				,STAFF_NAME
+				,JUMIN_NO
+				,SCHOOL_CODE
+				,DEPARTMENT_CODE
+				,GRADUATE_DAY
+		       )
+	    VALUES
+		       (
+		       STAFF_SEQ.NEXTVAL
+		       ,#{ staff_name }
+		       ,#{ jumin_no }
+		       ,(select school_code from code_school where school_name = #{ school_name })
+		       ,(select department_code from code_department where department_name = #{ department_name })
+		       ,#{ graduate_day }
+		       )	
+	</insert>
 
 
-
+	<update id="insertStaffSkill" parameterType="staff">
+		<foreach collection="skill_name" item="item" open="INSERT ALL" close="SELECT * FROM DUAL" separator=" ">
+		  INTO
+		       STAFF_SKILL
+		       (
+		       STAFF_SKILL_NO
+			   ,STAFF_NO
+			   ,SKILL_CODE
+		       )
+		VALUES
+		       (
+		       STAFF_SKILL_SEQ.NEXTVAL
+		       ,STAFF_SEQ.CURRVAL
+		       ,(select skill_code from code_skill where skill_name = #{ item })
+		       )
+		</foreach>
+		
+	</update>
 
 
 
