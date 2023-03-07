@@ -42,14 +42,24 @@
 
 <script>
 
-    var dt = new Date();
-    var year = dt.getFullYear();
-    var month = dt.getMonth() + 1;
-    if(month < 10) {month = "0" + month;}
-    var day = dt.getDate();
-    if(day < 10) {day = "0" + day;}
+ 	
+ 	
+ 	$(function() {
+ 		
+ 		
+	    var year =  new Date().getFullYear();
+		
+	    for(var i = (year-50) ; i <= year ; i++) {
+	        $('#year1').append('<option value="' + i + '">' + i + '</option>');    
+	    }
+ 		
+ 		
+ 	});
+    
+	
+    
 
-
+	
 
 </script>
 
@@ -115,9 +125,6 @@
                         <td colspan="5">
                             <select name="" id="year1">
                                 <option></option>
-                                <c:forEach var="i" begin="1950" end="2023">
-                                    <option>${ i }</option>
-                                </c:forEach>
                             </select>
                             년
                             <select name="" id="month1">
@@ -182,7 +189,7 @@
 
         function openEnrollForm() {
 
-            window.open('staffInputForm.do', '등록', 'width=800,height=400,location=yes,menubar=yes,scrollbar=no');
+            window.open('staffInputForm.do', '등록', 'width=1100,height=200,location=yes,menubar=yes,scrollbar=no');
             
             
 

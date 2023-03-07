@@ -45,14 +45,40 @@
 		// 주민등록번호 확인
 		function juminCheck() {
 			
+			var regExp1 = /\d{2}([0]\d|[1][0-2])([0][1-9]|[1-2]\d|[3][0-1])/;
+			var regExp2 = /[1-4]\d{6}/;
+			
 			let jumin_no = '';
 			
-			jumin_no += $('#jumin_no1').val();
-			jumin_no += $('#jumin_no2').val();
+			let jumin_no1 = $('#jumin_no1').val();
+			let jumin_no2 = $('#jumin_no2').val();
 			
+			if(!regExp1.test(jumin_no1)) {
+				alert('잘못된 주민등록번호입니다.');
+			} else if(!regExp2.test()) {
+				alert('잘못된 주민등록번호입니다.');				
+			}
+			
+			jumin_no = jumin_no1 + jumin_no2;
 			$('#juminNo').val(jumin_no);
 			
-		}	
+		}
+		
+		
+		
+		$(function() {
+			
+			$('#jumin_no1').focusout(function() {
+				juminCheck();
+			})
+			
+			$('#jumin_no2').focusout(function() {
+				juminCheck();
+			})
+			
+			
+		});
+		
 		
 		
 		
@@ -83,14 +109,14 @@
                             <th class="color">주민번호</th>
                             <td>
                             	<input type="hidden" name="jumin_no" id="juminNo">                            	
-                                <input type="text" id="jumin_no1" required onchange="juminCheck();"> 
+                                <input type="text" id="jumin_no1" required> 
                                 &nbsp; - &nbsp;
-                                <input type="password" id="jumin_no2" required onchange="juminCheck();">
+                                <input type="password" id="jumin_no2" required>
                             </td>
                             <th class="color">부서</th>
                             <td>
                                 <select name="department_name">
-                                    <option></option>
+                                    <option value=""></option>
                                     <option value="ICT사업부">ICT사업부</option>
                                     <option value="디지털트윈사업부">디지털트윈사업부</option>
                                     <option value="SI사업부">SI사업부</option>
@@ -138,7 +164,7 @@
                     </tbody>
                 </table>
                 <div class="button-area">
-                    <button type="submit">등록</button>
+                    <button type="button" onclick="inputSubmit();">등록</button>
                     <button type="reset">초기화</button>
                 </div>
 
@@ -149,6 +175,8 @@
        
         <script>
        		
+        
+        	// 졸업년월 추출
        		function graduateDateCheck() {
        			
        			var graduateDay = '';
@@ -157,7 +185,56 @@
        			
        			$('#graduateDay').val(graduateDay);
        		
-       		}
+       		};
+       		
+       		// 	부서 선택 확인
+       		function checkDepartment() {
+       			
+       			if($('select[name=department_name] option:selected').val() == '') {
+       				alert('부서를 선택해주세요.');
+       				return false;
+       			}
+       			     			
+				return true;       			
+       		};
+       		
+       		
+       		// 기술 선택 확인
+ 			function checkSkill() {
+       			
+        		let flag = 0;
+        		
+        		$('.skillCheckbox').each(function() {
+       				if($(this).is(':checked')) {
+       					flag++;
+       				}        	
+        		});
+       			
+        		if(flag == 0) {
+					alert('기술을 선택해주세요.');        			
+        			return false;
+        		}
+        		
+        		return true;
+       		};
+       		
+        	
+        	
+        	// 조건 확인 후 form 태그 submit
+        	function inputSubmit() {
+        		
+        		let flag = checkDepartment() && checkSkill();
+        		
+        		// 확인 완료 - 요청 보내기
+        		if(flag) {
+        			console.log(flag);
+        		}
+        		else {
+        			console.log(flag);        			
+        		}
+        		
+        		
+        	};
        		
        	
        
