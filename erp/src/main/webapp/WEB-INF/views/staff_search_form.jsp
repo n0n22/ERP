@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
 
 <style>
     .outer {
@@ -63,6 +63,7 @@
  		
  	}
 	
+ 	
     
 
 	
@@ -176,9 +177,17 @@
             </div>
             <div class="list-area">
                 <div class="list-count">
-                    총 00건 / 검색건수 00건
+                	<span id="listCount"></span>
                 </div>
                 <div class="list-table-area">
+                	<table id="listTable">
+                		<thead>
+                			
+                		</thead>
+                		<tbody>
+                		
+                		</tbody>
+                	</table>
                 </div>
                 <div class="list-page-area">
     
@@ -204,16 +213,41 @@
 		// 전체검색 AJAX
 		function selectAll(cpage) {
 			
+			console.log(cpage);
+			
 			$.ajax({
 				
 				url : 'selectAll.do',
 				type : 'post',
 				data : {cpage: cpage},
-				success : function(list) {
+				success : function(map) {
+					console.log(map);
+					console.log(map.list.length);
+
+					$('#listCount').text('총 ' + map.pi.listCount + '건');
+					$('#listTable thead').html('<tr><th>번호</th><th>이름</th><th>성별</th><th>부서</th><th>졸업일</th><th></th></tr>')
+					
+					var str = '';
+					for(var i = 0; i < map.list.length ;i++) {
+						console.log(map.list.length);
+						console.log(map.list[i]);
+						str += '<tr>'
+								+ '<td>' + map.list[i].staff_no + '</td>'
+								+ '<td>' + map.list[i].staff_name + '</td>'
+								+ '<td>' + map.list[i].jumin_no + '</td>'
+								+ '<td>' + map.list[i].department_name + '</td>'
+								+ '<td>' + map.list[i].graduate_day + '</td>'
+								+ '<td><button type="button">수정/삭제</button></td>'
+							+ '</tr>';						
+					}
+					
+					$('#listTable tbody').html(str);
+					
+					
 					
 				},
 				error : function() {
-					
+					console.log('selectAll AJAX 오류');
 				}
 				
 				

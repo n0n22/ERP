@@ -179,7 +179,7 @@
         	// 졸업년월 추출
        		function graduateDateCheck() {
        			let graduateDay = '';
-       			graduateDay += $('#year option:selected').val() + '-' + $('#month option:selected').val();
+       			graduateDay += $('#year option:selected').val() + '/' + $('#month option:selected').val();
        			
        			$('#graduateDay').val(graduateDay);
        		};

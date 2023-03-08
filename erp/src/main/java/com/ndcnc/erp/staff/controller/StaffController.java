@@ -1,6 +1,7 @@
 package com.ndcnc.erp.staff.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
 import com.ndcnc.erp.staff.model.service.StaffService;
 import com.ndcnc.erp.staff.model.vo.PageInfo;
 import com.ndcnc.erp.staff.model.vo.Staff;
@@ -49,8 +51,11 @@ public class StaffController {
 		PageInfo pi = getPageInfo(staffService.selectAllListCount(), cpage, 5, 5);
 		ArrayList<Staff> list = staffService.selectAllList(pi);
 		
+		HashMap<String, Object> map = new HashMap();
+		map.put("list", list);
+		map.put("pi", pi);
 
-	    return "main";	
+	    return new Gson().toJson(map);	
 	}
 	
 	
