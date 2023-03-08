@@ -190,7 +190,7 @@
                 	</table>
                 </div>
                 <div class="list-page-area">
-    
+    				<span id="pageArea"></span>
                 </div>
             </div>
 
@@ -212,25 +212,20 @@
 		
 		// 전체검색 AJAX
 		function selectAll(cpage) {
-			
-			console.log(cpage);
-			
+
 			$.ajax({
 				
 				url : 'selectAll.do',
 				type : 'post',
 				data : {cpage: cpage},
 				success : function(map) {
-					console.log(map);
-					console.log(map.list.length);
-
+					// 전체 검색 건수 추가
 					$('#listCount').text('총 ' + map.pi.listCount + '건');
+					// 테이블 머리 추가
 					$('#listTable thead').html('<tr><th>번호</th><th>이름</th><th>성별</th><th>부서</th><th>졸업일</th><th></th></tr>')
-					
+					// 테이블 컬럼 추가
 					var str = '';
 					for(var i = 0; i < map.list.length ;i++) {
-						console.log(map.list.length);
-						console.log(map.list[i]);
 						str += '<tr>'
 								+ '<td>' + map.list[i].staff_no + '</td>'
 								+ '<td>' + map.list[i].staff_name + '</td>'
@@ -240,10 +235,10 @@
 								+ '<td><button type="button">수정/삭제</button></td>'
 							+ '</tr>';						
 					}
-					
 					$('#listTable tbody').html(str);
 					
-					
+					// 페이징 처리
+					pagination(map.pi);
 					
 				},
 				error : function() {
@@ -256,7 +251,42 @@
 		}
 		
 		
-
+		// 페이징 처리
+		function pagination(pi) {
+			
+			let pageStr = '';
+			
+			// 첫 페이지 버튼
+			pageStr += '<a href="" onclick="selectAll(1);return false">&lt;&lt;</a>&nbsp;';
+			// 이전페이지 버튼
+			if(pi.startPage < pi.pageLimit) {
+				pageStr += '<a href="" onclick="return false">&lt;</a>&nbsp;';	
+			}
+			else {
+				pageStr += '<a href="" onclick="selectAll(' + (pi.startPage - 1)  + ');return false">&lt;</a>&nbsp;';				
+			}
+			// 페이지 버튼
+			for(var i = pi.startPage; i <= pi.endPage; i++) {
+				if(i != pi.currentPage) {
+					pageStr += '<a href="" onclick="selectAll(' + i + ');return false">' + i + '</a>&nbsp;';
+				}
+				else {
+					pageStr += '<a href="" onclick="selectAll(' + i + ');return false">[' + i + ']</a>&nbsp;';
+				}
+			}
+			// 다음페이지 버튼
+			if(pi.maxPage == pi.endPage) {
+				pageStr += '<a href="" onclick="return false">&gt;</a>&nbsp;';	
+			}
+			else {
+				pageStr += '<a href="" onclick="selectAll(' + (pi.endPage + 1)  + ');return false">&gt;</a>&nbsp;';				
+			}
+			// 마지막 페이지 버튼
+			pageStr += '<a href="" onclick="selectAll(' + pi.maxPage + ');return false">&gt;&gt;</a>&nbsp;';
+			
+			// 영역에 추가
+			$('#pageArea').html(pageStr);
+		}
 
 		
 		
