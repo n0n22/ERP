@@ -45,17 +45,23 @@
  	
  	
  	$(function() {
- 		
- 		
-	    var year =  new Date().getFullYear();
-		
-	    for(var i = (year-50) ; i <= year ; i++) {
-	        $('#year1').append('<option value="' + i + '">' + i + '</option>');    
-	    }
+
+ 		yearOption();
  		
  		
  	});
     
+ 	
+ 	// 졸업년도 option 생성
+ 	function yearOption() {
+	    var year =  new Date().getFullYear();
+		
+	    for(var i = (year-50) ; i <= year ; i++) {
+	        $('#year1').append('<option value="' + i + '">' + i + '</option>');
+	        $('#year2').append('<option value="' + i + '">' + i + '</option>');
+	    }
+ 		
+ 	}
 	
     
 
@@ -136,9 +142,6 @@
                             &nbsp;~&nbsp;
                             <select name="" id="year2">
                                 <option></option>
-                                <c:forEach var="i" begin="1950" end="2023">
-                                    <option>${ i }</option>
-                                </c:forEach>
                             </select>
                             년
                             <select name="" id="month2">
@@ -157,12 +160,18 @@
 
             <div class="button-area">
                 <div class="search-button-area">
-                    <button type="submit">검색</button>
-                    
-                    <button type="button">전부검색</button>
-                    <button type="button">초기화</button>
-                    <button type="button" onclick="openEnrollForm();">등록</button>
-                    
+    				<table>
+    					<tr>
+    						<td>
+    							<button type="submit">검색</button>
+    						</td>
+    						<td>
+    						    <button type="button" onclick="selectAll(1);">전부검색</button>
+			                    <button type="button">초기화</button>
+			                    <button type="button" onclick="openEnrollForm();">등록</button>
+    						</td>
+    					</tr>
+    				</table>
                 </div>
             </div>
             <div class="list-area">
@@ -170,7 +179,6 @@
                     총 00건 / 검색건수 00건
                 </div>
                 <div class="list-table-area">
-    
                 </div>
                 <div class="list-page-area">
     
@@ -186,15 +194,38 @@
     </div>
 
     <script>
-
+    
+		// 새창으로 등록폼 띄우기
         function openEnrollForm() {
-
             window.open('staffInputForm.do', '등록', 'width=1100,height=200,location=yes,menubar=yes,scrollbar=no');
-            
-            
-
-
         }
+		
+		
+		// 전체검색 AJAX
+		function selectAll(cpage) {
+			
+			$.ajax({
+				
+				url : 'selectAll.do',
+				type : 'post',
+				data : {cpage: cpage},
+				success : function(list) {
+					
+				},
+				error : function() {
+					
+				}
+				
+				
+			});
+			
+		}
+		
+		
+
+
+		
+		
 
 
     </script>

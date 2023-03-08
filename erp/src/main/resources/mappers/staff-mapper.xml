@@ -5,7 +5,7 @@
 
 <mapper namespace="staffMapper">
 	
-	
+	<!-- 사원 등록 - STAFF 테이블 -->
 	<insert id="insertStaff" parameterType="staff">
 		INSERT
 		  INTO
@@ -28,28 +28,51 @@
 		       ,#{ graduate_day }
 		       )	
 	</insert>
-
-
-	<update id="insertStaffSkill" parameterType="staff">
-		<foreach collection="skill_name" item="item" open="INSERT ALL" close="SELECT * FROM DUAL" separator=" ">
-		  INTO
-		       STAFF_SKILL
+    
+    <!-- 사원 등록 - STAFF-SKILL 테이블 -->
+    <insert id="insertStaffSkill" parameterType="staff">
+    	INSERT
+    	  INTO
+    	       STAFF_SKILL
 		       (
 		       STAFF_SKILL_NO
 			   ,STAFF_NO
 			   ,SKILL_CODE
 		       )
-		VALUES
-		       (
-		       STAFF_SKILL_SEQ.NEXTVAL
-		       ,STAFF_SEQ.CURRVAL
-		       ,(select skill_code from code_skill where skill_name = #{ item })
-		       )
-		</foreach>
-		
-	</update>
+			  SELECT
+				       STAFF_SKILL_SEQ.NEXTVAL,
+				       A.* 
+				  FROM 
+				       (
+					    <foreach item="item" collection="skill_name" separator="UNION ALL " >
+					        select 
+					               (select max(staff_no) from staff)
+					               ,(select skill_code from code_skill where skill_name = #{ item })
+					          from 
+					               dual
+					    </foreach>
+			   ) A
+    </insert>
+    
+    <!-- 사원 전체 목록 개수 -->
+    <select id="selectAllListCount">
+    	SELECT
+    	       COUNT(*)
+    	  FROM
+    	       STAFF
+    </select>
 
-
+	<!-- 사원 전체 목록 조회 -->
+	<select id="selectAllList">
+		select 
+				STAFF_NO,
+				STAFF_NAME,
+				DECODE(substr(jumin_no, 8, 1), '1', '남',  '2', '여', '3', '남', '4', '여') as "JUMIN_NO",
+				DEPARTMENT_NAME,
+				substr(GRADUATE_DAY, 0, 4) || '-' || substr(GRADUATE_DAY, 4, 2)
+				from staff S, code_department C
+				where (S.department_code = C.department_code)
+	</select>
 
 
 

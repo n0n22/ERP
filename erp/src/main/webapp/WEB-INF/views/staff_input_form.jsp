@@ -42,38 +42,38 @@
 	
 	<script>
 	
-		// 주민등록번호 확인
+		// 주민등록번호 값 전달
 		function juminCheck() {
-			
-			var regExp1 = /\d{2}([0]\d|[1][0-2])([0][1-9]|[1-2]\d|[3][0-1])/;
-			var regExp2 = /[1-4]\d{6}/;
-			
 			let jumin_no = '';
 			
-			let jumin_no1 = $('#jumin_no1').val();
-			let jumin_no2 = $('#jumin_no2').val();
-			
-			if(!regExp1.test(jumin_no1)) {
-				alert('잘못된 주민등록번호입니다.');
-			} else if(!regExp2.test()) {
-				alert('잘못된 주민등록번호입니다.');				
-			}
-			
-			jumin_no = jumin_no1 + jumin_no2;
-			$('#juminNo').val(jumin_no);
-			
+			jumin_no += $('#jumin_no1').val() + '-' + $('#jumin_no2').val();
+
+			$('#juminNo').val(jumin_no);		
 		}
 		
-		
-		
+	
 		$(function() {
 			
+			
+			// 주민등록번호 확인
 			$('#jumin_no1').focusout(function() {
-				juminCheck();
+				
+				var regExp1 = /\d{2}([0]\d|[1][0-2])([0][1-9]|[1-2]\d|[3][0-1])/;
+			
+				if(!regExp1.test($('#jumin_no1').val())) {
+					alert('잘못된 주민등록번호입니다.');
+				}
+			
 			})
 			
 			$('#jumin_no2').focusout(function() {
-				juminCheck();
+				
+				var regExp2 = /[1-4]\d{6}/;
+				
+				if(!regExp2.test($('#jumin_no2').val())) {
+					alert('잘못된 주민등록번호입니다.');
+				}
+				
 			})
 			
 			
@@ -92,7 +92,7 @@
     <div class="outer">
 
         <div class="insert-area">
-            <form method="" action="staffInput.do">
+            <form method="post" action="staffInput.do" id="inputForm">
 
                 <table id="insert-table">
                     <thead>
@@ -109,9 +109,9 @@
                             <th class="color">주민번호</th>
                             <td>
                             	<input type="hidden" name="jumin_no" id="juminNo">                            	
-                                <input type="text" id="jumin_no1" required> 
+                                <input type="text" id="jumin_no1" required onchange="juminCheck();"> 
                                 &nbsp; - &nbsp;
-                                <input type="password" id="jumin_no2" required>
+                                <input type="password" id="jumin_no2" required onchange="juminCheck();">
                             </td>
                             <th class="color">부서</th>
                             <td>
@@ -178,13 +178,10 @@
         
         	// 졸업년월 추출
        		function graduateDateCheck() {
-       			
-       			var graduateDay = '';
-       			graduateDay += $('#year option:selected').val();
-       			graduateDay += $('#month option:selected').val();
+       			let graduateDay = '';
+       			graduateDay += $('#year option:selected').val() + '-' + $('#month option:selected').val();
        			
        			$('#graduateDay').val(graduateDay);
-       		
        		};
        		
        		// 	부서 선택 확인
@@ -222,12 +219,16 @@
         	
         	// 조건 확인 후 form 태그 submit
         	function inputSubmit() {
-        		
         		let flag = checkDepartment() && checkSkill();
         		
         		// 확인 완료 - 요청 보내기
         		if(flag) {
-        			console.log(flag);
+        			if(confirm('저장하시겠습니까?')) {
+	        			$('#inputForm').submit();        				
+        			} else {
+        				arlert('취소되었습니다.');
+        			}
+        			
         		}
         		else {
         			console.log(flag);        			
@@ -236,12 +237,19 @@
         		
         	};
        		
-       	
+
        
        
         </script>
 
 
+       	<!-- 등록 후 확인 창 띄우기 -->
+       	<c:if test="${not empty alertMsg}">
+       		<script>
+       			alert('${ alertMsg }');      		
+       			window.close();
+       		</script>
+       	</c:if>
 
 
     </div>
