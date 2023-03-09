@@ -92,7 +92,8 @@
 		       STAFF_NAME, 
 		       DECODE(substr(jumin_no, 8, 1), '1', '남',  '2', '여', '3', '남', '4', '여') as "JUMIN_NO",
 		       DEPARTMENT_NAME,
-		       GRADUATE_DAY
+		       GRADUATE_DAY,
+		       S.SCHOOL_CODE
 		  FROM 
 		       STAFF S
 		  JOIN 
@@ -105,20 +106,91 @@
 	<!-- 사원 검색 목록 개수 -->
 	<select id="selectStaffCount" parameterType="searchCondition" resultType="_int">
 		SELECT
-		       *
+		       COUNT(*)
 		  FROM
 		       VW_STAFF
-		<if test="#{staff_name} != ''" >
-		
+		 WHERE
+		       STAFF_NAME LIKE '%' || #{staff_name} || '%'
+		<if test="jumin_no != 'all'">
+		   AND JUMIN_NO = '${jumin_no}'
 		</if>
-		
-		
-		
-		
-	
+		<if test="department_name != ''">
+		   AND DEPARTMENT_NAME = #{department_name}
+		</if>
+		<if test="school_name != null">
+		   AND SCHOOL_CODE IN 
+		       (SELECT SCHOOL_CODE 
+		          FROM CODE_SCHOOL 
+		         WHERE SCHOOL_NAME IN 
+			<foreach collection="school_name" item="item" index="index" separator="," open="(" close="))">
+                       #{item}
+            </foreach>
+		</if>
+		<if test="skill_name != null">
+		   AND STAFF_NO IN
+		    <foreach collection="skill_name" item="item" index="index" separator="INTERSECT" open="(" close=")">
+			   select staff_no
+			     from staff_skill
+			    where skill_code in (select skill_code from code_skill where skill_name = #{item})
+            </foreach>
+		</if>
+		<if test="graduate_day1 != ''">
+		   AND GRADUATE_DAY BETWEEN #{graduate_day1} AND #{graduate_day2}
+		</if>
+		 ORDER
+		    BY
+		       STAFF_NO DESC
+	</select>
+
+	<!-- 사원 검색 목록 -->
+	<select id="selectStaff" parameterType="searchCondition" resultMap="staffResultSet">
+		SELECT
+		       STAFF_NO, 
+		       STAFF_NAME, 
+		       JUMIN_NO,
+		       DEPARTMENT_NAME,
+		       GRADUATE_DAY
+		  FROM
+		       VW_STAFF
+		 WHERE
+		       STAFF_NAME LIKE '%' || #{staff_name} || '%'
+		<if test="jumin_no != 'all'">
+		   AND JUMIN_NO = '${jumin_no}'
+		</if>
+		<if test="department_name != ''">
+		   AND DEPARTMENT_NAME = #{department_name}
+		</if>
+		<if test="school_name != null">
+		   AND SCHOOL_CODE IN 
+		       (SELECT SCHOOL_CODE 
+		          FROM CODE_SCHOOL 
+		         WHERE SCHOOL_NAME IN 
+			<foreach collection="school_name" item="item" index="index" separator="," open="(" close="))">
+                       #{item}
+            </foreach>
+		</if>
+		<if test="skill_name != null">
+		   AND STAFF_NO IN
+		    <foreach collection="skill_name" item="item" index="index" separator="INTERSECT" open="(" close=")">
+			   select staff_no
+			     from staff_skill
+			    where skill_code in (select skill_code from code_skill where skill_name = #{item})
+            </foreach>
+		</if>
+		<if test="graduate_day1 != ''">
+		   AND GRADUATE_DAY BETWEEN #{graduate_day1} AND #{graduate_day2}
+		</if>
+		 ORDER
+		    BY
+		       STAFF_NO DESC
 	</select>
 
 
 
 
 </mapper>
+
+
+
+
+

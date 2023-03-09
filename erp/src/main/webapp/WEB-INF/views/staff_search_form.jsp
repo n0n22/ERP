@@ -167,6 +167,7 @@
 	    						    <button type="button" onclick="selectAll(1);">전부검색</button>
 				                    <button type="button" onclick="clearTable();">초기화</button>
 				                    <button type="button" onclick="openEnrollForm();">등록</button>
+				                    <button type="reset" id="resetBtn">검색조건초기화</button>
 	    						</td>
 	    					</tr>
 	    				</table>
@@ -258,6 +259,8 @@
 		
 		// 전체검색 AJAX
 		function selectAll(cpage) {
+			
+			$('#resetBtn').click();
 
 			$.ajax({
 				
@@ -265,26 +268,12 @@
 				type : 'post',
 				data : {cpage: cpage},
 				success : function(map) {
-					// 전체 검색 건수 추가
-					$('#listCount').text('총 ' + map.pi.listCount + '건');
-					// 테이블 머리 추가
-					$('#listTable thead').html('<tr><th>번호</th><th>이름</th><th>성별</th><th>부서</th><th>졸업일</th><th></th></tr>')
-					// 테이블 컬럼 추가
-					var str = '';
-					for(var i = 0; i < map.list.length ;i++) {
-						str += '<tr>'
-								+ '<td>' + map.list[i].staff_no + '</td>'
-								+ '<td>' + map.list[i].staff_name + '</td>'
-								+ '<td>' + map.list[i].jumin_no + '</td>'
-								+ '<td>' + map.list[i].department_name + '</td>'
-								+ '<td>' + map.list[i].graduate_day + '</td>'
-								+ '<td><button type="button">수정/삭제</button></td>'
-							+ '</tr>';						
-					}
-					$('#listTable tbody').html(str);
+
+					// 검색 결과 처리
+					setList(map);
 					
 					// 페이징 처리
-					pagination(map.pi);
+					pagination(map.pi, 'selectAll');
 					
 				},
 				error : function() {
@@ -308,8 +297,14 @@
 				url : 'searchStaff.do',
 				type : 'post',
 				data : $('#searchConditionForm').serialize(),
-				success : function() {
-										
+				success : function(map) {
+					
+					// 검색 결과 처리
+					setList(map);
+					
+					// 페이징 처리
+					pagination(map.pi, 'searchStaff');
+					
 				},
 				error : function() {
 					
@@ -321,29 +316,57 @@
 		
 		
 		
+		// 검색 결과 처리
+		function setList(map) {
+			
+			// 전체 검색 건수 추가
+			$('#listCount').text('총 ' + map.pi.listCount + '건');
+			// 테이블 머리 추가
+			$('#listTable thead').html('<tr><th>번호</th><th>이름</th><th>성별</th><th>부서</th><th>졸업일</th><th></th></tr>')
+			// 테이블 컬럼 추가
+			var str = '';
+			if(map.list.length != 0) {
+				for(var i = 0; i < map.list.length ;i++) {
+					str += '<tr>'
+							+ '<td>' + map.list[i].staff_no + '</td>'
+							+ '<td>' + map.list[i].staff_name + '</td>'
+							+ '<td>' + map.list[i].jumin_no + '</td>'
+							+ '<td>' + map.list[i].department_name + '</td>'
+							+ '<td>' + map.list[i].graduate_day + '</td>'
+							+ '<td><button type="button">수정/삭제</button></td>'
+						+ '</tr>';						
+				}
+			}
+			else {
+				str += '<tr><td colspan="6">조회된 결과가 없습니다.<td></tr>'
+			}
+			$('#listTable tbody').html(str);
+			
+		}
+		
 		
 		
 		// 페이징 처리
-		function pagination(pi) {
+		function pagination(pi, str) {
 			
 			let pageStr = '';
 			
 			// 첫 페이지 버튼
-			pageStr += '<a href="" onclick="selectAll(1);return false">&lt;&lt;</a>&nbsp;';
+			pageStr += '<a href="" onclick="' + str + '(1);return false">&lt;&lt;</a>&nbsp;';
 			// 이전페이지 버튼
 			if(pi.startPage < pi.pageLimit) {
 				pageStr += '<a href="" onclick="return false">&lt;</a>&nbsp;';	
 			}
 			else {
-				pageStr += '<a href="" onclick="selectAll(' + (pi.startPage - 1)  + ');return false">&lt;</a>&nbsp;';				
+				pageStr += '<a href="" onclick="' + str + '(' + (pi.startPage - 1)  + ');return false">&lt;</a>&nbsp;';				
 			}
 			// 페이지 버튼
 			for(var i = pi.startPage; i <= pi.endPage; i++) {
 				if(i != pi.currentPage) {
-					pageStr += '<a href="" onclick="selectAll(' + i + ');return false">' + i + '</a>&nbsp;';
+					pageStr += '<a href="" onclick="' + str + '(' + i + ');return false">' + i + '</a>&nbsp;';
 				}
 				else {
-					pageStr += '<a href="" onclick="selectAll(' + i + ');return false">[' + i + ']</a>&nbsp;';
+					pageStr += '<a href="" onclick="' + str + '(' + i + ');return false">[' + i + ']</a>&nbsp;';
 				}
 			}
 			// 다음페이지 버튼
@@ -351,10 +374,10 @@
 				pageStr += '<a href="" onclick="return false">&gt;</a>&nbsp;';	
 			}
 			else {
-				pageStr += '<a href="" onclick="selectAll(' + (pi.endPage + 1)  + ');return false">&gt;</a>&nbsp;';				
+				pageStr += '<a href="" onclick="' + str + '(' + (pi.endPage + 1)  + ');return false">&gt;</a>&nbsp;';				
 			}
 			// 마지막 페이지 버튼
-			pageStr += '<a href="" onclick="selectAll(' + pi.maxPage + ');return false">&gt;&gt;</a>&nbsp;';
+			pageStr += '<a href="" onclick="' + str + '(' + pi.maxPage + ');return false">&gt;&gt;</a>&nbsp;';
 			
 			// 영역에 추가
 			$('#pageArea').html(pageStr);

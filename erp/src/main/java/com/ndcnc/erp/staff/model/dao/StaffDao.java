@@ -41,5 +41,14 @@ public class StaffDao {
 		return sqlSession.selectOne("staffMapper.selectStaffCount", sc);
 	}
 	
+	// 사원 검색 목록
+	public ArrayList<Staff> selectStaff(SearchCondition sc, PageInfo pi, SqlSessionTemplate sqlSession) {
+		
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
+		
+		return (ArrayList)sqlSession.selectList("staffMapper.selectStaff", sc, rowBounds);
+	}
+	
 	
 }

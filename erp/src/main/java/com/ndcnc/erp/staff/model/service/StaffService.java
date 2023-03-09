@@ -40,6 +40,11 @@ public class StaffService {
 		return staffDao.selectStaffCount(sc, sqlSession);
 	}
 	
+	// 사원 검색 목록
+	public ArrayList<Staff> selectStaff(SearchCondition sc, PageInfo pi) {
+		return staffDao.selectStaff(sc, pi, sqlSession);
+	}
+	
 	
 	
 }
