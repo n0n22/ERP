@@ -75,17 +75,48 @@
 	<!-- 사원 전체 목록 조회 -->
 	<select id="selectAllList" resultMap="staffResultSet">
 		SELECT 
-			   STAFF_NO
-			   ,STAFF_NAME
-			   ,DECODE(substr(jumin_no, 8, 1), '1', '남',  '2', '여', '3', '남', '4', '여') as "JUMIN_NO"
-			   ,DEPARTMENT_NAME
-			   ,GRADUATE_DAY
+			   *
 		  FROM 
-		       staff S, code_department C
-		 WHERE (S.department_code = C.department_code)
+		       VW_STAFF
+		 ORDER
+		    BY
+		       STAFF_NO DESC
 	</select>
+	
+	<!-- 
+	
+	VW_STAFF 사원 목록 조회를 위한 VIEW 작성
+	
+		SELECT 
+		       S.STAFF_NO, 
+		       STAFF_NAME, 
+		       DECODE(substr(jumin_no, 8, 1), '1', '남',  '2', '여', '3', '남', '4', '여') as "JUMIN_NO",
+		       DEPARTMENT_NAME,
+		       GRADUATE_DAY
+		  FROM 
+		       STAFF S
+		  JOIN 
+		       CODE_DEPARTMENT D ON (S.DEPARTMENT_CODE = D.DEPARTMENT_CODE)
+		  JOIN 
+		       CODE_SCHOOL C ON (S.SCHOOL_CODE = C.SCHOOL_CODE)
 
-
+	 -->
+	
+	<!-- 사원 검색 목록 개수 -->
+	<select id="selectStaffCount" parameterType="searchCondition" resultType="_int">
+		SELECT
+		       *
+		  FROM
+		       VW_STAFF
+		<if test="#{staff_name} != ''" >
+		
+		</if>
+		
+		
+		
+		
+	
+	</select>
 
 
 

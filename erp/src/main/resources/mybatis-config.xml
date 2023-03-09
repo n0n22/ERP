@@ -12,6 +12,7 @@
 	
 	<typeAliases>
 		<typeAlias type="com.ndcnc.erp.staff.model.vo.Staff" alias="staff" />
+		<typeAlias type="com.ndcnc.erp.staff.model.vo.SearchCondition" alias="searchCondition" />
 	</typeAliases>
 	
 	

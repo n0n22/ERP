@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ndcnc.erp.staff.model.vo.PageInfo;
+import com.ndcnc.erp.staff.model.vo.SearchCondition;
 import com.ndcnc.erp.staff.model.vo.Staff;
 
 @Repository
@@ -35,7 +36,10 @@ public class StaffDao {
 		return (ArrayList)sqlSession.selectList("staffMapper.selectAllList", null, rowBounds);
 	}
 	
-	
+	// 사원 검색 목록 개수
+	public int selectStaffCount(SearchCondition sc, SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("staffMapper.selectStaffCount", sc);
+	}
 	
 	
 }

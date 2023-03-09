@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.ndcnc.erp.staff.model.dao.StaffDao;
 import com.ndcnc.erp.staff.model.vo.PageInfo;
+import com.ndcnc.erp.staff.model.vo.SearchCondition;
 import com.ndcnc.erp.staff.model.vo.Staff;
 
 @Service
@@ -32,6 +33,11 @@ public class StaffService {
 	// 사원 전체 목록
 	public ArrayList<Staff> selectAllList(PageInfo pi) {
 		return staffDao.selectAllList(pi, sqlSession);
+	}
+	
+	// 사원 검색 목록 개수
+	public int selectStaffCount(SearchCondition sc) {
+		return staffDao.selectStaffCount(sc, sqlSession);
 	}
 	
 	
