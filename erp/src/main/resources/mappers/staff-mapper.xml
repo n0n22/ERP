@@ -13,6 +13,18 @@
 		<result column="GRADUATE_DAY" property="graduate_day" />
 	</resultMap>
 	
+	<resultMap id="staffCollectionResultSet" type="staff">
+		<result column="STAFF_NO" property="staff_no" />
+		<result column="STAFF_NAME" property="staff_name" />
+		<result column="JUMIN_NO" property="jumin_no" />
+		<result column="DEPARTMENT_NAME" property="department_name" />
+		<result column="GRADUATE_DAY" property="graduate_day" />
+		<result column="SCHOOL_NAME" property="school_name" />
+		<collection column="SKILL_NAME" property="skill_name" ofType="string" javaType="list">
+			<result column="SKILL_NAME" property="skill_name" />
+		</collection>
+	</resultMap>
+	
 	
 	
 	<!-- 사원 등록 - STAFF 테이블 -->
@@ -85,7 +97,7 @@
 	
 	<!-- 
 	
-	VW_STAFF 사원 목록 조회를 위한 VIEW 작성
+	VW_STAFF : 사원 목록 조회를 위한 VIEW 작성
 	
 		SELECT 
 		       S.STAFF_NO, 
@@ -185,8 +197,105 @@
 		       STAFF_NO DESC
 	</select>
 
+	
+	
+	
+	<!-- 
+	
+	VW_STAFF_INFO : 사원 상세 정보를 위한 View 생성
 
-
+		select
+				S.STAFF_NO,
+				S.STAFF_NAME,
+				S.JUMIN_NO,
+				D.DEPARTMENT_NAME,
+				CC.SCHOOL_NAME,
+				CS.SKILL_NAME,
+				S.GRADUATE_DAY
+		from
+				staff S
+		join code_department D on(S.department_code = D.department_code)
+		join staff_skill SS on(S.staff_no = SS.staff_no)
+		join code_skill CS on(SS.skill_code = CS.skill_code)
+		join code_school CC on(S.school_code = CC.school_code)
+	
+	 -->
+	
+	
+	<!-- 사원 상세 정보 검색 -->
+	<select id="staffCollectionResultSet" parameterType="_int" resultMap="staffCollectionResultSet">
+		SELECT
+		  	   *
+		  FROM
+		       VW_STAFF_INFO
+		 WHERE
+		       STAFF_NO = #{staff_no}
+	</select>
+	
+	<!-- 
+	<select id="selectStaffSkill" resultType="string" parameterType="_int">
+		SELECT
+		       SKILL_NAME
+		  FROM
+		       STAFF_SKILL S
+		  JOIN
+		       CODE_SKILL C ON (S.SKILL_CODE = C.SKILL_CODE)
+	</select>
+	-->
+	
+	
+	<!-- 사원 정보 수정 -->
+	<update id="updateStaff" parameterType="staff">
+		UPDATE 
+		       (
+				select
+						S.STAFF_NO,
+						S.STAFF_NAME,
+						S.JUMIN_NO,
+						S.DEPARTMENT_CODE,
+						S.SCHOOL_CODE,
+						S.GRADUATE_DAY
+				  from
+						staff S
+						join code_department D on(S.department_code = D.department_code)
+						join code_school CC on(S.school_code = CC.school_code)
+			   )
+		   SET
+			   STAFF_NAME = #{staff_name},
+			   JUMIN_NO = #{jumin_no},
+			   DEPARTMENT_CODE = (select department_code from code_department where department_name = #{department_name}),
+			   SCHOOL_CODE = (select school_code from code_school where school_name = #{school_name}),
+			   GRADUATE_DAY = #{graduate_day}
+	     WHERE 
+	           STAFF_NO = #{staff_no}
+	</update>
+	
+	
+	
+	
+	<!-- 사원 스킬 삭제 -->
+	<delete id="deleteStaffSkills" parameterType="_int">
+		DELETE
+		  FROM
+		       STAFF_SKILL
+		 WHERE
+		       STAFF_NO = #{staff_no}	
+	</delete>
+	
+	
+	
+	<!-- 사원 정보 삭제 -->
+	<delete id="deleteStaff" parameterType="_int">
+		DELETE
+		  FROM
+		       STAFF
+		 WHERE
+		       STAFF_NO = #{staff_no}
+	</delete>
+	
+	
+	
+	
 
 </mapper>
 

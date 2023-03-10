@@ -244,7 +244,9 @@
 
         </div>
 
-
+		<form id="updelForm">
+			<input type="hidden" id="staffNo" name="staff_no">
+		</form>
 
 
     </div>
@@ -255,6 +257,21 @@
         function openEnrollForm() {
             window.open('staffInputForm.do', '등록', 'width=1100,height=200,location=yes,menubar=yes,scrollbar=no');
         }
+		
+		// 새창으로 수정삭제폼 띄우기
+		function openUpdelForm(e) {
+			
+			window.open('', '수정/삭제', 'width=1100,height=200,location=yes,menubar=yes,scrollbar=no');
+		
+			$('#staffNo').val($(e).parent().siblings().first().text());
+			
+			updelForm.action = 'staffUpdelForm.do';
+			updelForm.target = '수정/삭제';
+			updelForm.method = 'post';
+			
+			updelForm.submit();
+		}
+		
 		
 		
 		// 전체검색 AJAX
@@ -333,7 +350,7 @@
 							+ '<td>' + map.list[i].jumin_no + '</td>'
 							+ '<td>' + map.list[i].department_name + '</td>'
 							+ '<td>' + map.list[i].graduate_day + '</td>'
-							+ '<td><button type="button">수정/삭제</button></td>'
+							+ '<td><button type="button" onclick="openUpdelForm(this);">수정/삭제</button></td>'
 						+ '</tr>';						
 				}
 			}
@@ -393,6 +410,12 @@
 			$('#pageArea').html('');
 			
 		}
+		
+		
+		// 해당 창으로 돌아왔을때, 실행시킴
+		window.addEventListener('focus', function() {
+			selectAll(1);
+		}, false);
 		
 		
 

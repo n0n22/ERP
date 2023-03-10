@@ -50,5 +50,25 @@ public class StaffDao {
 		return (ArrayList)sqlSession.selectList("staffMapper.selectStaff", sc, rowBounds);
 	}
 	
+	// 사원 상세 정보 조회
+	public Staff selectStaffInfo(int staff_no, SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("staffMapper.staffCollectionResultSet", staff_no);
+	}
+	
+	// 사원 정보 수정
+	@Transactional
+	public int updateStaff(Staff staff, SqlSessionTemplate sqlSession) {
+		return sqlSession.update("staffMapper.updateStaff", staff)
+			   * sqlSession.delete("staffMapper.deleteStaffSkills", staff.getStaff_no())
+			   * sqlSession.insert("staffMapper.insertStaffSkill", staff);
+	}
+	
+	// 사원 정보 삭제
+	public int deleteStaff(int staff_no, SqlSessionTemplate sqlSession) {
+		return sqlSession.delete("staffMapper.deleteStaff", staff_no);
+	}
+	
+	
+	
 	
 }

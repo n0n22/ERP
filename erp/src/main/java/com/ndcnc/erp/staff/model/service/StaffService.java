@@ -45,6 +45,21 @@ public class StaffService {
 		return staffDao.selectStaff(sc, pi, sqlSession);
 	}
 	
+	// 사원 상세 정보 조회
+	public Staff selectStaffInfo(int staff_no) {
+		return staffDao.selectStaffInfo(staff_no, sqlSession);
+	}
+	
+	// 사원 정보 수정
+	public int updateStaff(Staff staff) {
+		return staffDao.updateStaff(staff, sqlSession);
+	}
+	
+	public int deleteStaff(int staff_no) {
+		return staffDao.deleteStaff(staff_no, sqlSession);
+	}
+	
+	
 	
 	
 }
