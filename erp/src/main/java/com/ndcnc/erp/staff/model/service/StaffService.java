@@ -59,6 +59,10 @@ public class StaffService {
 		return staffDao.deleteStaff(staff_no, sqlSession);
 	}
 	
+	// 기술 목록 조회
+	public ArrayList<String> selectSkill() {
+		return staffDao.selectSkill(sqlSession);
+	}
 	
 	
 	

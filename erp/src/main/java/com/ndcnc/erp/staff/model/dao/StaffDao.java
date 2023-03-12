@@ -70,6 +70,10 @@ public class StaffDao {
 		return sqlSession.delete("staffMapper.deleteStaff", staff_no);
 	}
 	
+	// 기술 목록 조회
+	public ArrayList<String> selectSkill(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("staffMapper.selectSkill", null);
+	}
 	
 	
 	

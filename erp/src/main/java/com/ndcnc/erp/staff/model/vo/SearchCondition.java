@@ -17,5 +17,7 @@ public class SearchCondition {
 	
 	private int cpage; // 현재페이지
 	
+	private List<String> skill_name2;
+	private String skillCondition;
 	
 }

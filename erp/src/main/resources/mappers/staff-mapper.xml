@@ -309,6 +309,17 @@
 	</delete>
 	
 	
+	<!-- 기술 목록 조회 -->
+	<select id="selectSkill" resultType="string">
+		SELECT
+		       SKILL_NAME
+		  FROM
+		       CODE_SKILL
+		 WHERE
+		       SKILL_NAME NOT IN ('Java', 'JSP', 'ASP', 'PHP', 'Delphi')
+	</select>
+	
+	
 	
 	
 

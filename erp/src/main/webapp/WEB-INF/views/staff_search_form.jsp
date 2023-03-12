@@ -7,7 +7,9 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <style>
@@ -62,7 +64,7 @@
  				}
  			})
  			
- 		})
+ 		});
  		
  		
  		$('#month1').change(function() {
@@ -75,11 +77,60 @@
  				}
  			})
  			
- 		})
+ 		});
+		
+ 		
+ 		
+ 		// 전체 기술 목록 불러오기
+ 		var addSkills = [];
+ 		
+ 		window.addEventListener('focus', function() {
+ 			addSkills = [];
+ 			selectSkills(addSkills);
+ 			console.log(addSkills);
+ 		}, false); 		
+ 		
+		// 자동완성
+ 		$('#skillInputAuto').autocomplete({
+ 		    source: addSkills,
+ 		    focus: function (event, ui) {
+ 		    	return false;
+ 		    },
+ 		    select: function (event, ui) {},
+ 		    minLength: 1,
+ 		    delay: 100,
+ 		    autoFocus: true,
+ 		});
+
+ 		
+ 		
+ 		
+ 		
+ 		
  		
  		
  		
  	});
+ 	
+ 	
+ 	function selectSkills(addSkills) {
+ 		
+ 		$.ajax({
+ 			url : 'selectSkill.do',
+ 			type : 'post',
+ 			success : function(data) {
+				for(var i = 0; i < data.length; i++) {
+					addSkills.push(data[i]);
+				}
+ 			},
+ 			error : function() {
+ 				
+ 			}
+ 			
+ 		});
+ 	}
+ 	
+ 	
     
  	
  	// 졸업년도 option 생성
@@ -92,6 +143,9 @@
 	    }
  		
  	}
+ 	
+ 	
+ 	
  	
  	
  	
@@ -190,9 +244,16 @@
 	                    <tr>
 	                    	<th>추가기술</th>
 	                    	<td>
-	                    		<input type="text">
-	                    		<button type="button">추가</button>
+	                    		<input type="text" id="skillInputAuto">
+	                    		<button type="button" onclick="addSkill(this);">추가</button>
 	                    	</td>
+	                    	<td>
+	                    		<label><input type="radio" name="skillCondition" value="and"> and</label>
+	                    		<label><input type="radio" name="skillCondition" value="or"> or</label>
+	                    	</td>
+	                    	<td colspan="3" id="addSkills">
+                        		
+                        	</td>
 	                    </tr>
 	                    <tr>
 	                    	<td colspan="6" align="center">
@@ -223,9 +284,45 @@
 	        <input type="hidden" id="graduateDay1" name="graduate_day1">
 	        <input type="hidden" id="graduateDay2" name="graduate_day2">
 	        <input type="hidden" id="cpage" name="cpage">
+	        <div id="addSkillInput">
+	        
+	        </div>
 		</form>
 		<script>
 		
+ 		
+	    	var inSkill =  [];
+	 		
+	    	// 추가기술 추가
+	    	function addSkill(e) {
+	    		let skill = $(e).prev().val();
+	    		
+	    		if(skill == '') {
+	    			alert('기술을 입력해주세요.');
+	    		}
+	    		else {
+		    		if(inSkill.indexOf(skill) != -1) {
+		    			alert('이미 추가한 기술입니다.');
+		    		}
+		    		else {
+		    			inSkill.push(skill);
+			    		
+			    		$('#addSkills').append('<button type="button" onclick="removeSkill(this);">' + skill + '</button>');
+			    		$('#addSkillInput').append('<input type="hidden" name="skill_name2" value="' + skill + '">');
+		    		}	    			
+	    		}
+	    		$(e).prev().val('');
+	    	}	
+	    
+	    	// 추가기술 삭제
+	    	function removeSkill(e) {
+	    		
+	    		let skills = $(e).siblings();
+	    		$('#addSkills').html(skills);
+	    	}
+	 		
+		
+			
 			function setGraduateDay() {
 				
        			let graduateDay1 = '';
@@ -372,7 +469,7 @@
 					
 				},
 				error : function() {
-					
+					console.log('searchStaff AJAX 오류');
 				}				
 				
 			});
@@ -422,7 +519,7 @@
 		
 		// 페이징 처리
 		function pagination(pi, str) {
-			
+
 			let pageStr = '';
 			
 			// 첫 페이지 버튼

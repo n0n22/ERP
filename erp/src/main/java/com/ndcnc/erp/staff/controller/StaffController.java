@@ -115,6 +115,15 @@ public class StaffController {
 	}
 	
 	
+	// 기술 목록 조회
+	@ResponseBody
+	@RequestMapping(value="selectSkill.do", produces="application/json; charset=UTF-8")
+	public String selectSkill() {
+		ArrayList<String> list = new ArrayList();
+		list = staffService.selectSkill();
+		return new Gson().toJson(list);
+	}
+	
 	
 	
 	
