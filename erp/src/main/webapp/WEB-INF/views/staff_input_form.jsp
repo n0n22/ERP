@@ -6,29 +6,17 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.slim.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <style>
+
     .outer {
         width: 1200px;
     }
     
-    #insert-table {
-        margin: auto;
-        border: 1px solid black;
-        border-collapse: collapse;
-    }
 
-    #insert-table th, #insert-table td {
-        border: 1px solid black;
-    }
-
-    #insert-table .color {
-        background-color: lightgray;
-    }
-
-    .button-area>div {
-        margin: auto;
-    }
 
 
 
@@ -94,10 +82,10 @@
         <div class="insert-area">
             <form method="post" action="staffInput.do" id="inputForm">
 
-                <table id="insert-table">
+                <table id="insert-table" class="table table-bordered">
                     <thead>
                         <tr>
-                            <th colspan="6" class="color">사원 정보 등록</th>
+                            <th colspan="6" class="color"><h4>사원 정보 등록</h4></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -130,17 +118,17 @@
                         <tr>
                             <th class="color">학력</th>
                             <td>
-                                <input type="radio" name="school_name" value="고졸">고졸 &nbsp;
-                                <input type="radio" name="school_name" value="전문대졸">전문대졸 &nbsp;
-                                <input type="radio" name="school_name" value="일반대졸" checked>일반대졸 &nbsp;
+                                <label><input type="radio" name="school_name" value="고졸"> 고졸</label> &nbsp;
+                                <label><input type="radio" name="school_name" value="전문대졸"> 전문대졸</label> &nbsp;
+                                <label><input type="radio" name="school_name" value="일반대졸"> 일반대졸</label> &nbsp;
                             </td>
                             <th class="color">기술</th>
                             <td colspan="3">
-                                <input type="checkbox" name="skill_name" class="skillCheckbox" value="Java">Java &nbsp;
-                                <input type="checkbox" name="skill_name" class="skillCheckbox" value="JSP">JSP &nbsp;
-                                <input type="checkbox" name="skill_name" class="skillCheckbox" value="ASP">ASP &nbsp;
-                                <input type="checkbox" name="skill_name" class="skillCheckbox" value="PHP">PHP &nbsp;
-                                <input type="checkbox" name="skill_name" class="skillCheckbox" value="Delphi">Delphi &nbsp;
+                                <label><input type="checkbox" name="skill_name" class="skillCheckbox" value="Java"> Java</label> &nbsp;
+                                <label><input type="checkbox" name="skill_name" class="skillCheckbox" value="JSP"> JSP</label> &nbsp;
+                                <label><input type="checkbox" name="skill_name" class="skillCheckbox" value="ASP"> ASP</label> &nbsp;
+                                <label><input type="checkbox" name="skill_name" class="skillCheckbox" value="PHP"> PHP</label> &nbsp;
+                                <label><input type="checkbox" name="skill_name" class="skillCheckbox" value="Delphi"> Delphi</label> &nbsp;
                             </td>
                         </tr>
                         <tr>
@@ -161,13 +149,25 @@
                                 </select>
                                 월
                         </tr>
+                        <tr>
+                        	<th>추가기술</th>
+                        	<td>
+                        		<input type="text">
+                        		<button type="button" onclick="addSkill(this);">추가</button>
+                        	</td>
+                        	<td colspan="3" id="addSkills">
+                        		
+                        	</td>
+                        </tr>
                     </tbody>
                 </table>
                 <div class="button-area">
                     <button type="button" onclick="inputSubmit();">등록</button>
                     <button type="reset">초기화</button>
                 </div>
-
+				<div id="addSkillInput">
+				
+				</div>
             </form>
         </div>
        	
@@ -175,6 +175,28 @@
        
         <script>
        		
+        	function addSkill(e) {
+        		
+        		let skill = $(e).prev().val();
+        		$('#addSkills').append('<button type="button" onclick="removeSkill(this);">' + skill + '</button>');
+        		$('#addSkillInput').append('<input type="hidden" name="skill_name" value="' + skill + '">');
+        		$(e).prev().val('');
+        		
+        	}	
+        
+        	
+        	function removeSkill(e) {
+        		
+        		let skills = $(e).siblings();
+        		let skillInputs = $('#addSkillInput input[value=' + $(e).text() + ']').siblings();
+        		$('#addSkills').html(skills);
+        		$('#addSkillInput').html(skillInputs);
+        	        		
+        	}
+        	
+        
+        
+        
         
         	// 졸업년월 추출
        		function graduateDateCheck() {

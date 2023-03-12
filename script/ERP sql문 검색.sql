@@ -272,3 +272,36 @@ alter table staff add foreign key (department_code) references code_department(d
 delete cascade from staff where staff_no = 1;
 
 
+
+MERGE 
+ INTO code_skill
+USING dual
+   ON (skill_name = 'CSS')
+ WHEN NOT MATCHED THEN
+      INSERT 
+      VALUES(code_skill_seq.nextval, 'CSS');
+
+
+
+
+replace and create view VW_STAFF_INFO
+as
+		select
+				S.STAFF_NO,
+				S.STAFF_NAME,
+				S.JUMIN_NO,
+				D.DEPARTMENT_NAME,
+				CC.SCHOOL_NAME,
+				CS.SKILL_NAME,
+				S.GRADUATE_DAY
+		from
+				staff S
+		join code_department D on(S.department_code = D.department_code)
+		join staff_skill SS on(S.staff_no = SS.staff_no)
+		join code_skill CS on(SS.skill_code = CS.skill_code)
+		join code_school CC on(S.school_code = CC.school_code)
+	
+
+
+
+

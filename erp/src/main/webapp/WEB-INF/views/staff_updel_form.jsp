@@ -7,29 +7,18 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.slim.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <style>
     .outer {
         width: 1200px;
     }
     
-    #insert-table {
-        margin: auto;
-        border: 1px solid black;
-        border-collapse: collapse;
-    }
 
-    #insert-table th, #insert-table td {
-        border: 1px solid black;
-    }
 
-    #insert-table .color {
-        background-color: lightgray;
-    }
 
-    .button-area>div {
-        margin: auto;
-    }
 
 
 </style>
@@ -101,9 +90,9 @@
 			skills = '${staff.skill_name}';
 			skills = skills.replace('[', '');
 			skills = skills.replace(']', '');
-			var skillList = skills.split(','); 
+			var skillList = skills.split(', '); 
 			
-			
+			/*
 			// console.log($('input[name=skill_name]'));
 			$('input[name=skill_name]').each(function() {
 				for(var i = 0; i < skillList.length; i++) {
@@ -114,6 +103,28 @@
 				
 				};
 			});
+			*/
+			
+
+			
+			var basicSkills = ['Java', 'JSP', 'ASP', 'PHP', 'Delphi'];
+			var addSkillList = [];
+			for(var i = 0; i < skillList.length; i++) {
+				if(basicSkills.indexOf(skillList[i]) > -1) {
+					console.log(skillList[i]);
+					$('input[value=' + skillList[i] + ']').attr('checked', true);
+				}
+				else {					
+					addSkillList.push(skillList[i]);
+				}
+			}
+
+			for(var i = 0; i < addSkillList.length; i++) {
+	    		$('#addSkills').append('<button type="button" onclick="removeSkill(this);">' + addSkillList[i] + '</button>');
+	    		$('#addSkillInput').append('<input type="hidden" name="skill_name" value="' + addSkillList[i] + '">');
+			}
+			
+			
 
 			
 			// 조회한 졸업년도 입력
@@ -148,7 +159,7 @@
         <div class="insert-area">
             <form method="post" action="updateStaff.do" id="updateForm">
 				<input type="hidden" value="${ staff.staff_no }" name="staff_no">
-                <table id="insert-table">
+                <table id="insert-table" class="table table-bordered">
                     <thead>
                         <tr>
                             <th colspan="6" class="color">사원 정보 등록</th>
@@ -215,12 +226,25 @@
                                 </select>
                                 월
                         </tr>
+                        <tr>
+                        	<th>추가기술</th>
+                        	<td>
+                        		<input type="text">
+                        		<button type="button" onclick="addSkill(this);">추가</button>
+                        	</td>
+                        	<td colspan="3" id="addSkills">
+                        		
+                        	</td>
+                        </tr>
                     </tbody>
                 </table>
                 <div class="button-area">
                     <button type="submit" onclick="juminCheck();graduateDateCheck();">수정</button>
                     <button type="button" onclick="deleteStaff();">삭제</button>
                 </div>
+                <div id="addSkillInput">
+				
+				</div>
             </form>
         </div>
         
@@ -232,6 +256,28 @@
        	
        
         <script>
+        
+	    	function addSkill(e) {
+	    		
+	    		let skill = $(e).prev().val();
+	    		$('#addSkills').append('<button type="button" onclick="removeSkill(this);">' + skill + '</button>');
+	    		$('#addSkillInput').append('<input type="hidden" name="skill_name" value="' + skill + '">');
+	    		$(e).prev().val('');
+	    		
+	    	}	
+	    
+	    	
+	    	function removeSkill(e) {
+	    		
+	    		let skills = $(e).siblings();
+	    		let skillInputs = $('#addSkillInput input[value=' + $(e).text() + ']').siblings();
+	    		$('#addSkills').html(skills);
+	    		$('#addSkillInput').html(skillInputs);
+	    	        		
+	    	}
+    	
+        
+        
        		
         
         	// 졸업년월 추출

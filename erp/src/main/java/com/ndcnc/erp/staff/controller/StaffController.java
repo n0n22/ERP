@@ -32,6 +32,7 @@ public class StaffController {
 	// 사원 등록
 	@RequestMapping("staffInput.do")
 	public ModelAndView inputStaff(@ModelAttribute Staff newStaff, ModelAndView mv) {
+		System.out.println(newStaff);
 		
 		if(staffService.inputStaff(newStaff) > 0) {
 			mv.addObject("alertMsg", "등록되었습니다.").setViewName("staff_input_form");

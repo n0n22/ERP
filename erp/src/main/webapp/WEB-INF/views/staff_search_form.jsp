@@ -6,32 +6,36 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <style>
+
     .outer {
         width: 1200px;
     }
+	
+	
+	.search-area, .body-area {
+		width: 900px;
+		margin: auto;
+		
+	}
+	
+	label {
+		cursor: pointer;
+	}
+	
+	a {
+		text-decorate: none;
+		color: black;
+	}
+	
 
-    
-    #search-table {
-        margin: auto;
-        border: 1px solid black;
-        border-collapse: collapse;
-    }
-
-    #search-table th, #search-table td {
-        border: 1px solid black;
-    }
-
-    #search-table .color {
-        background-color: lightgray;
-    }
-
-    .button-area>div {
-        margin: auto;
-    }
-
+	.list-page-area {
+		text-align: center;
+	}
 
 
 
@@ -48,6 +52,32 @@
 
  		yearOption();
  		
+ 		$('#year1').change(function() {
+ 			let selectYear = $('#year1 option:selected').val();
+ 			console.log(selectYear);
+ 			
+ 			$('#year2 option').each(function() {
+ 				if($(this).val() == selectYear) {
+ 					$(this).attr('selected', true);
+ 				}
+ 			})
+ 			
+ 		})
+ 		
+ 		
+ 		$('#month1').change(function() {
+ 			let selectMonth = $('#month1 option:selected').val();
+ 			
+ 			
+ 			$('#month2 option').each(function() {
+ 				if($(this).val() == selectMonth) {
+ 					$(this).attr('selected', true);
+ 				}
+ 			})
+ 			
+ 		})
+ 		
+ 		
  		
  	});
     
@@ -56,12 +86,15 @@
  	function yearOption() {
 	    var year =  new Date().getFullYear();
 		
-	    for(var i = (year-50) ; i <= year ; i++) {
+	    for(var i = (year-50) ; i <= (year + 3) ; i++) {
 	        $('#year1').append('<option value="' + i + '">' + i + '</option>');
 	        $('#year2').append('<option value="' + i + '">' + i + '</option>');
 	    }
  		
  	}
+ 	
+ 	
+ 	
 	
  	
     
@@ -79,11 +112,11 @@
     
     <div class="outer">
 		<form action="" method="post" id="searchConditionForm">
-	        <div class="search-aprea">
-	            <table id="search-table">
+	        <div class="search-area">
+	            <table id="search-table" class="table table-bordered">
 	                <thead>
 	                    <tr>
-	                        <th colspan="6" class="color">사원 정보 검색</th>
+	                        <th colspan="6" class="color"><h3 align="center">사원 정보 검색</h3></th>
 	                    </tr>
 	                </thead>
 	                <tbody>
@@ -94,8 +127,8 @@
 	                        </td>
 	                        <th class="color">성별</th>
 	                        <td>
-	                            <input type="checkbox" name="jumin" value="남">남 &nbsp;&nbsp;
-	                            <input type="checkbox" name="jumin" value="여">여 &nbsp;&nbsp;
+	                            <label><input type="checkbox" name="jumin" value="남" id="gender1"> 남</label> &nbsp;&nbsp;
+	                            <label><input type="checkbox" name="jumin" value="여" id="gender2"> 여 </label>&nbsp;&nbsp;
 	                        </td>
 	                        <th class="color">부서</th>
 	                        <td>
@@ -114,17 +147,17 @@
 	                    <tr>
 	                        <th class="color">학력</th>
 	                        <td>
-	                            <input type="checkbox" name="school_name" value="고졸">고졸 &nbsp;
-	                            <input type="checkbox" name="school_name" value="전문대졸">전문대졸 &nbsp;
-	                            <input type="checkbox" name="school_name" value="일반대졸">일반대졸 &nbsp;
+	                            <label><input type="checkbox" name="school_name" value="고졸"> 고졸</label> &nbsp;
+	                            <label><input type="checkbox" name="school_name" value="전문대졸"> 전문대졸</label> &nbsp;
+	                            <label><input type="checkbox" name="school_name" value="일반대졸"> 일반대졸</label> &nbsp;
 	                        </td>
 	                        <th class="color">기술</th>
 	                        <td colspan="3">
-	                            <input type="checkbox" name="skill_name" value="Java">Java &nbsp;
-	                            <input type="checkbox" name="skill_name" value="JSP">JSP &nbsp;
-	                            <input type="checkbox" name="skill_name" value="ASP">ASP &nbsp;
-	                            <input type="checkbox" name="skill_name" value="PHP">PHP &nbsp;
-	                            <input type="checkbox" name="skill_name" value="Delphi">Delphi &nbsp;
+	                            <label><input type="checkbox" name="skill_name" value="Java"> Java</label> &nbsp;
+	                            <label><input type="checkbox" name="skill_name" value="JSP"> JSP</label> &nbsp;
+	                            <label><input type="checkbox" name="skill_name" value="ASP"> ASP</label> &nbsp;
+	                            <label><input type="checkbox" name="skill_name" value="PHP"> PHP</label> &nbsp;
+	                            <label><input type="checkbox" name="skill_name" value="Delphi"> Delphi</label> &nbsp;
 	                        </td>
 	                    </tr>
 	                    <tr>
@@ -154,6 +187,20 @@
 	
 	                        </td>
 	                    </tr>
+	                    <tr>
+	                    	<th>추가기술</th>
+	                    	<td>
+	                    		<input type="text">
+	                    		<button type="button">추가</button>
+	                    	</td>
+	                    </tr>
+	                    <tr>
+	                    	<td colspan="6" align="center">
+	    							<button type="button" onclick="searchStaff(1);">검색</button>	 &nbsp;&nbsp;              	
+				                    <button type="reset" id="resetBtn">검색조건초기화</button>
+	                    	</td>
+	                    </tr>
+	                
 	                </tbody>
 	            </table>
 	            <div class="button-area">
@@ -161,13 +208,11 @@
 	    				<table>
 	    					<tr>
 	    						<td>
-	    							<button type="button" onclick="searchStaff(1);">검색</button>
 	    						</td>
 	    						<td>
 	    						    <button type="button" onclick="selectAll(1);">전부검색</button>
 				                    <button type="button" onclick="clearTable();">초기화</button>
 				                    <button type="button" onclick="openEnrollForm();">등록</button>
-				                    <button type="reset" id="resetBtn">검색조건초기화</button>
 	    						</td>
 	    					</tr>
 	    				</table>
@@ -226,8 +271,11 @@
                 <div class="list-count">
                 	<span id="listCount"></span>
                 </div>
+                <div class="list-order">
+                	
+                </div>
                 <div class="list-table-area">
-                	<table id="listTable">
+                	<table id="listTable" class="table table-bordered">
                 		<thead>
                 			
                 		</thead>
@@ -255,13 +303,13 @@
     
 		// 새창으로 등록폼 띄우기
         function openEnrollForm() {
-            window.open('staffInputForm.do', '등록', 'width=1100,height=200,location=yes,menubar=yes,scrollbar=no');
+            window.open('staffInputForm.do', '등록', 'width=1250,height=400,location=yes,menubar=yes,scrollbar=no');
         }
 		
 		// 새창으로 수정삭제폼 띄우기
 		function openUpdelForm(e) {
 			
-			window.open('', '수정/삭제', 'width=1100,height=200,location=yes,menubar=yes,scrollbar=no');
+			window.open('', '수정/삭제', 'width=1250, height=400, location=yes,menubar=yes');
 		
 			$('#staffNo').val($(e).parent().siblings().first().text());
 			
@@ -339,7 +387,16 @@
 			// 전체 검색 건수 추가
 			$('#listCount').text('총 ' + map.pi.listCount + '건');
 			// 테이블 머리 추가
-			$('#listTable thead').html('<tr><th>번호</th><th>이름</th><th>성별</th><th>부서</th><th>졸업일</th><th></th></tr>')
+			let tableHead = '<tr>' 
+							+ '<th>번호</th>'
+							+ '<th>이름</th>' 
+							+ '<th>성별</th>'
+							+ '<th>부서</th>'
+							+ '<th>졸업일</th>'
+							+ '<th></th>'
+						  + '</tr>'
+			
+			$('#listTable thead').html(tableHead);
 			// 테이블 컬럼 추가
 			var str = '';
 			if(map.list.length != 0) {
@@ -369,7 +426,7 @@
 			let pageStr = '';
 			
 			// 첫 페이지 버튼
-			pageStr += '<a href="" onclick="' + str + '(1);return false">&lt;&lt;</a>&nbsp;';
+			pageStr += '<a href="" onclick="' + str + '(1);return false">처음</a>&nbsp;';
 			// 이전페이지 버튼
 			if(pi.startPage < pi.pageLimit) {
 				pageStr += '<a href="" onclick="return false">&lt;</a>&nbsp;';	
@@ -394,7 +451,7 @@
 				pageStr += '<a href="" onclick="' + str + '(' + (pi.endPage + 1)  + ');return false">&gt;</a>&nbsp;';				
 			}
 			// 마지막 페이지 버튼
-			pageStr += '<a href="" onclick="' + str + '(' + pi.maxPage + ');return false">&gt;&gt;</a>&nbsp;';
+			pageStr += '<a href="" onclick="' + str + '(' + pi.maxPage + ');return false">끝</a>&nbsp;';
 			
 			// 영역에 추가
 			$('#pageArea').html(pageStr);
@@ -411,12 +468,12 @@
 			
 		}
 		
-		
+		/*
 		// 해당 창으로 돌아왔을때, 실행시킴
 		window.addEventListener('focus', function() {
 			selectAll(1);
 		}, false);
-		
+		*/
 		
 
 

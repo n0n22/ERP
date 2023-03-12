@@ -50,6 +50,21 @@
 		       ,#{ graduate_day }
 		       )	
 	</insert>
+	<!-- 사원 등록 - CODE_SKILL 테이블 -->
+	<update id="updateSkill" parameterType="list">
+		MERGE 
+		 INTO code_skill C
+		USING 
+			  (
+			  <foreach collection="list" item="item" index="index" separator="UNION ALL" open="(" close=")">
+			  	select #{item} as skill_name from dual
+			  </foreach>
+			  ) S
+		   ON (C.skill_name = S.skill_name)
+		 WHEN NOT MATCHED THEN
+		      INSERT 
+		      VALUES(code_skill_seq.nextval, S.skill_name)
+	</update>
     
     <!-- 사원 등록 - STAFF-SKILL 테이블 -->
     <insert id="insertStaffSkill" parameterType="staff">

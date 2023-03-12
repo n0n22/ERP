@@ -18,7 +18,9 @@ public class StaffDao {
 	// 사원 등록
 	@Transactional
 	public int inputStaff(Staff newStaff, SqlSessionTemplate sqlSession) {
-		return sqlSession.insert("staffMapper.insertStaff", newStaff) * sqlSession.insert("staffMapper.insertStaffSkill", newStaff);
+		sqlSession.update("staffMapper.updateSkill", newStaff.getSkill_name());
+		return sqlSession.insert("staffMapper.insertStaff", newStaff)
+				* sqlSession.insert("staffMapper.insertStaffSkill", newStaff);
 	}
 	
 	
