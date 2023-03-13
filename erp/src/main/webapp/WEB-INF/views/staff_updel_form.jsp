@@ -112,7 +112,7 @@
                 </table>
                 <div class="button-area">
                     <button type="button" onclick="updateFormSubmit();">수정</button>
-                    <button type="button" onclick="deleteStaff();">삭제</button>
+                    <button type="button" onclick="deleteFormSubmit();">삭제</button>
                 </div>
                 <div id="addSkillInput">
 				
@@ -121,8 +121,8 @@
         </div>
         
         
-        <form method="post" action="deleteStaff.do">
-        	<input type="hidden" value="${ staff.staff_no }">
+        <form method="post" action="deleteStaff.do" id="deleteForm">
+        	<input type="hidden" value="${ staff.staff_no }" name="staff_no">
         </form>
 
 
@@ -449,6 +449,16 @@
     	};
    		
 
+    	
+    	// 삭제 form태그 실행
+    	function deleteFormSubmit() {
+    		if(confirm('정말로 삭제하시겠습니까?')) {
+	    		$('#deleteForm').submit();    			
+    		}
+    		else {
+    			alert('취소되었습니다.');
+    		}
+    	};
 		
     	
 		

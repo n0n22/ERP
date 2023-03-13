@@ -331,6 +331,8 @@
 			updelForm.submit();
 		}
 		
+		
+		
 		// 전체검색 AJAX
 		function selectAll(order, desc, cpage) {
 			
@@ -343,11 +345,13 @@
 				type : 'post',
 				data : {cpage: cpage, orderCondition: order, desc: desc},
 				success : function(map) {
+					map.str = 'selectAll';
 					// 검색 결과 처리
 					setList(map);
+					
 					if(map.list.length != 0) {
 						// 페이징 처리
-						pagination(map.pi, 'selectAll');
+						pagination(map);
 					}
 				},
 				error : function() {
@@ -391,7 +395,11 @@
 			
 			// 전체 검색 건수 추가
 			$('#listCount').text('총 ' + map.pi.listCount + '건');
-
+			
+			let method = '';
+			method += map.str + "('" + map.orderCondition + "','" + map.desc + "',1)";
+			console.log(method);
+			
 			// 테이블 머리 추가           
 			let tableHead = '<tr>' 
 							+ '<th>번호</th>'
@@ -435,37 +443,40 @@
 		}
 		
 		// 페이징 처리
-		function pagination(pi, str) {
+		function pagination(map) {
 
+			let method = '';
+			method += map.str + "('" + map.orderCondition + "','" + map.desc + "',";
 			let pageStr = '';
 			
 			// 첫 페이지 버튼
-			pageStr += '<a href="" onclick="' + str + '(1);return false">처음</a>&nbsp;';
+			pageStr += '<a href="#" onclick="' + method + '1);return false">처음</a>&nbsp;';
+			// pageStr += `<a href="#" onclick="${map.str}(${map.orderCondition}, ${map.desc}, 1); return false">처음</a>`;
 			// 이전페이지 버튼
-			if(pi.startPage < pi.pageLimit) {
-				pageStr += '<a href="" onclick="return false">&lt;</a>&nbsp;';	
+			if(map.pi.startPage < map.pi.pageLimit) {
+				pageStr += '<a href="#" onclick="return false">&lt;</a>&nbsp;';	
 			}
 			else {
-				pageStr += '<a href="" onclick="' + str + '(' + (pi.startPage - 1)  + ');return false">&lt;</a>&nbsp;';				
+				pageStr += '<a href="#" onclick="'  + method +  (pi.startPage - 1)  + ');return false">&lt;</a>&nbsp;';				
 			}
 			// 페이지 버튼
-			for(var i = pi.startPage; i <= pi.endPage; i++) {
-				if(i != pi.currentPage) {
-					pageStr += '<a href="" onclick="' + str + '(' + i + ');return false">' + i + '</a>&nbsp;';
+			for(var i = map.pi.startPage; i <= map.pi.endPage; i++) {
+				if(i != map.pi.currentPage) {
+					pageStr += '<a href="" onclick="'  + method +  i + ');return false">' + i + '</a>&nbsp;';
 				}
 				else {
-					pageStr += '<a href="" onclick="' + str + '(' + i + ');return false">[' + i + ']</a>&nbsp;';
+					pageStr += '<a href="" onclick="'  + method +  i + ');return false">[' + i + ']</a>&nbsp;';
 				}
 			}
 			// 다음페이지 버튼
-			if(pi.maxPage == pi.endPage) {
+			if(map.pi.maxPage == map.pi.endPage) {
 				pageStr += '<a href="" onclick="return false">&gt;</a>&nbsp;';	
 			}
 			else {
-				pageStr += '<a href="" onclick="' + str + '(' + (pi.endPage + 1)  + ');return false">&gt;</a>&nbsp;';				
+				pageStr += '<a href="" onclick="'  + method + (map.pi.endPage + 1)  + ');return false">&gt;</a>&nbsp;';				
 			}
 			// 마지막 페이지 버튼
-			pageStr += '<a href="" onclick="' + str + '(' + pi.maxPage + ');return false">끝</a>&nbsp;';
+			pageStr += '<a href="" onclick="'  + method + map.pi.maxPage + ');return false">끝</a>&nbsp;';
 			
 			// 영역에 추가
 			$('#pageArea').html(pageStr);

@@ -27,16 +27,16 @@ CREATE TABLE staff (
 	staff_no	number(3)	primary key,
 	staff_name	varchar2(20)	NOT NULL,
 	jumin_no	char(14)		    NOT NULL unique,
-	school_code	number(3)		NOT NULL,
-	department_code	number(3)	NOT NULL,
-	graduate_day	char(10)		NOT NULL
+	school_code	number(3)		NOT NULL references code_school(school_code) on delete cascade,
+	department_code	number(3)	NOT NULL references code_department(department_code) on delete cascade,
+	graduate_day	char(10)	NOT NULL
 );
 
 
 CREATE TABLE staff_skill (
 	staff_skill_no	number(3)	primary key,
-	staff_no  	number(3)		NOT NULL references staff(staff_no),
-	skill_code	number(3)		NOT NULL references code_skill(skill_code)
+	staff_no  	number(3)		NOT NULL references staff(staff_no) on delete cascade,
+	skill_code	number(3)		NOT NULL references code_skill(skill_code) on delete cascade
 );
 
 
@@ -80,6 +80,4 @@ INSERT INTO CODE_SCHOOL VALUES(CODE_SCHOOL_SEQ.NEXTVAL, '¿¸πÆ¥Î¡π');
 INSERT INTO CODE_SCHOOL VALUES(CODE_SCHOOL_SEQ.NEXTVAL, '¿œπ›¥Î¡π');
 
 commit;
-
-
 

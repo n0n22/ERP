@@ -86,7 +86,6 @@ public class StaffController {
 	public ModelAndView selectStaff(@RequestParam int staff_no, ModelAndView mv) {
 		// 사원 정보 조회 후 들고 등록 페이지로 이동
 		mv.addObject("staff", staffService.selectStaffInfo(staff_no)).setViewName("staff_updel_form");		
-		
 		return mv;
 	}
 	
@@ -94,12 +93,11 @@ public class StaffController {
 	// 사원 정보 수정
 	@RequestMapping("updateStaff.do")
 	public ModelAndView updateStaff(@ModelAttribute Staff staff, ModelAndView mv) {
-		System.out.println(staff);
 		
 		if(staffService.updateStaff(staff) > 0) {
-			mv.addObject("staff", staffService.selectStaffInfo(staff.getStaff_no())).addObject("alertMsg", "수정이 완료되었습니다. 창을 닫으시겠습니까?");
+			mv.addObject("staff", staffService.selectStaffInfo(staff.getStaff_no())).addObject("alertMsg", "수정이 완료되었습니다.");
 		} else {
-			
+			mv.addObject("alertMsg", "수정 실패!");
 		};
 		
 		mv.setViewName("staff_updel_form");
@@ -112,10 +110,12 @@ public class StaffController {
 	public ModelAndView updateStaff(@RequestParam int staff_no, ModelAndView mv) {
 		
 		if(staffService.deleteStaff(staff_no) > 0) {
-			
+			mv.addObject("alertMsg", "삭제되었습니다.");
+		} else {
+			mv.addObject("alertMsg", "삭제 실패!");
 		}
 		
-		
+		mv.setViewName("staff_updel_form");
 		return mv;
 	}
 	
