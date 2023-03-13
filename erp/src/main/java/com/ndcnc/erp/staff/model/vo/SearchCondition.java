@@ -19,5 +19,7 @@ public class SearchCondition {
 	
 	private List<String> skill_name2;
 	private String skillCondition;
+	private String orderCondition;
+	private String desc;
 	
 }

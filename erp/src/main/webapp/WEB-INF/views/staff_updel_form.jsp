@@ -6,9 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <style>
@@ -27,132 +28,6 @@
 </head>
 <body>
 
-<script>
-	
-		// 주민등록번호 값 전달
-		function juminCheck() {
-			let jumin_no = '';
-			
-			jumin_no += $('#jumin_no1').val() + '-' + $('#jumin_no2').val();
-
-			$('#juminNo').val(jumin_no);		
-		}
-		
-	
-		$(function() {
-			
-			
-			// 주민등록번호 확인
-			$('#jumin_no1').focusout(function() {
-				
-				var regExp1 = /\d{2}([0]\d|[1][0-2])([0][1-9]|[1-2]\d|[3][0-1])/;
-			
-				if(!regExp1.test($('#jumin_no1').val())) {
-					alert('잘못된 주민등록번호입니다.');
-				}
-			
-			})
-			
-			$('#jumin_no2').focusout(function() {
-				
-				var regExp2 = /[1-4]\d{6}/;
-				
-				if(!regExp2.test($('#jumin_no2').val())) {
-					alert('잘못된 주민등록번호입니다.');
-				}
-				
-			})
-			
-			
-			
-			// 조회한 주민등록번호 입력
-			var jumin = '${staff.jumin_no}';
-			$('#jumin_no1').val(jumin.substring(0, 6));
-			$('#jumin_no2').val(jumin.substring(7, 14));
-			
-			
-			// 조회한 부서 입력
-			$('select[name=department_name] option').each(function() {
-				if($(this).val() == '${staff.department_name}') {
-					$(this).attr('selected', true);
-				}
-			});
-			
-			// 조회한 학력 입력
-			$('input[name=school_name]').each(function() {
-				if($(this).val() == '${staff.school_name}') {
-					$(this).attr('checked', true);
-				}
-			});
-			
-			// 조회한 기술 입력
-			var skills;
-			skills = '${staff.skill_name}';
-			skills = skills.replace('[', '');
-			skills = skills.replace(']', '');
-			var skillList = skills.split(', '); 
-			
-			/*
-			// console.log($('input[name=skill_name]'));
-			$('input[name=skill_name]').each(function() {
-				for(var i = 0; i < skillList.length; i++) {
-					if(skillList[i] == $(this).val()) {
-						$(this).attr('checked', true);
-						break;
-					}
-				
-				};
-			});
-			*/
-			
-
-			
-			var basicSkills = ['Java', 'JSP', 'ASP', 'PHP', 'Delphi'];
-			var addSkillList = [];
-			for(var i = 0; i < skillList.length; i++) {
-				if(basicSkills.indexOf(skillList[i]) > -1) {
-					console.log(skillList[i]);
-					$('input[value=' + skillList[i] + ']').attr('checked', true);
-				}
-				else {					
-					addSkillList.push(skillList[i]);
-				}
-			}
-
-			for(var i = 0; i < addSkillList.length; i++) {
-	    		$('#addSkills').append('<button type="button" onclick="removeSkill(this);">' + addSkillList[i] + '</button>');
-	    		$('#addSkillInput').append('<input type="hidden" name="skill_name" value="' + addSkillList[i] + '">');
-			}
-			
-			
-
-			
-			// 조회한 졸업년도 입력
-			var gday = '${ staff.graduate_day }';
-			gday = gday.trim().split('/');
-			
-			$('#year option').each(function() {
-				if($(this).val() == gday[0]) {
-					$(this).attr('selected', true);
-				}
-			});
-			$('#month option').each(function() {
-				if($(this).val() == gday[1]) {
-					$(this).attr('selected', true);
-				}
-			});
-			
-			
-			
-			
-		});
-		
-		
-	
-	</script>
-
-
-	
 
     <div class="outer">
 
@@ -174,9 +49,9 @@
                             <th class="color">주민번호</th>
                             <td>
                             	<input type="hidden" name="jumin_no" id="juminNo">                            	
-                                <input type="text" id="jumin_no1" required onchange="juminCheck();"> 
+                                <input type="text" id="jumin_no1" required> 
                                 &nbsp; - &nbsp;
-                                <input type="password" id="jumin_no2" required onchange="juminCheck();">
+                                <input type="password" id="jumin_no2" required>
                             </td>
                             <th class="color">부서</th>
                             <td>
@@ -214,9 +89,6 @@
                             	<input type="hidden" id="graduateDay" name="graduate_day">
                                 <select name="graduate_year" id="year" onchange="graduateDateCheck();">
                                     <option></option>
-                                    <c:forEach var="i" begin="1950" end="2023">
-                                        <option value=${ i }>${ i }</option>
-                                    </c:forEach>
                                 </select>
                                 년	
                                 <select name="graduate_month" id="month" onchange="graduateDateCheck();">
@@ -229,17 +101,17 @@
                         <tr>
                         	<th>추가기술</th>
                         	<td>
-                        		<input type="text">
+                        		<input type="text" id="skillInputAuto">
                         		<button type="button" onclick="addSkill(this);">추가</button>
                         	</td>
-                        	<td colspan="3" id="addSkills">
+                        	<td colspan="4" id="addSkills">
                         		
                         	</td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="button-area">
-                    <button type="submit" onclick="juminCheck();graduateDateCheck();">수정</button>
+                    <button type="button" onclick="updateFormSubmit();">수정</button>
                     <button type="button" onclick="deleteStaff();">삭제</button>
                 </div>
                 <div id="addSkillInput">
@@ -252,126 +124,345 @@
         <form method="post" action="deleteStaff.do">
         	<input type="hidden" value="${ staff.staff_no }">
         </form>
-       	
-       	
-       
-        <script>
-        
-	    	function addSkill(e) {
-	    		
-	    		let skill = $(e).prev().val();
-	    		$('#addSkills').append('<button type="button" onclick="removeSkill(this);">' + skill + '</button>');
-	    		$('#addSkillInput').append('<input type="hidden" name="skill_name" value="' + skill + '">');
-	    		$(e).prev().val('');
-	    		
-	    	}	
-	    
-	    	
-	    	function removeSkill(e) {
-	    		
-	    		let skills = $(e).siblings();
-	    		let skillInputs = $('#addSkillInput input[value=' + $(e).text() + ']').siblings();
-	    		$('#addSkills').html(skills);
-	    		$('#addSkillInput').html(skillInputs);
-	    	        		
-	    	}
-    	
-        
-        
-       		
-        
-        	// 졸업년월 추출
-       		function graduateDateCheck() {
-       			let graduateDay = '';
-       			graduateDay += $('#year option:selected').val() + '/' + $('#month option:selected').val();
-       			
-       			$('#graduateDay').val(graduateDay);
-       		};
-       		
-       		// 	부서 선택 확인
-       		function checkDepartment() {
-       			
-       			if($('select[name=department_name] option:selected').val() == '') {
-       				alert('부서를 선택해주세요.');
-       				return false;
-       			}
-       			     			
-				return true;       			
-       		};
-       		
-       		
-       		// 기술 선택 확인
- 			function checkSkill() {
-       			
-        		let flag = 0;
-        		
-        		$('.skillCheckbox').each(function() {
-       				if($(this).is(':checked')) {
-       					flag++;
-       				}        	
-        		});
-       			
-        		if(flag == 0) {
-					alert('기술을 선택해주세요.');        			
-        			return false;
-        		}
-        		
-        		return true;
-       		};
-       		
-        	
-        	
-        	// 조건 확인 후 form 태그 submit
-        	function inputSubmit() {
-        		let flag = checkDepartment() && checkSkill();
-        		
-        		// 확인 완료 - 요청 보내기
-        		if(flag) {
-        			if(confirm('저장하시겠습니까?')) {
-	        			$('#inputForm').submit();        				
-        			} else {
-        				arlert('취소되었습니다.');
-        			}
-        			
-        		}
-        		else {
-        			console.log(flag);        			
-        		}
-        		
-        		
-        	};
-       		
-        	
-        	
-        	function deleteStaff() {
-        		
-        		   		
-        		
-        		
-        	}
-        	
-        	
-        	
-        	
-        	
-
-       
-       
-        </script>
-
-
-       	<!-- 등록 후 확인 창 띄우기 -->
-       	<c:if test="${not empty alertMsg}">
-       		<script>
-       			if(confirm('${ alertMsg }')) {
-	       			window.close();       				
-       			};
-       			
-       		</script>
-       	</c:if>
 
 
     </div>
+    
+    
+   	<!-- 등록 후 확인 창 띄우기 -->
+   	<c:if test="${not empty alertMsg}">
+   		<script>
+   			if(confirm('${ alertMsg }')) {
+    			window.close();       				
+   			};
+   			
+   		</script>
+   	</c:if>
+    
+    
+	<script>
+
+		// 페이지 로딩 시 실행
+		$(function() {
+			
+			
+			// 주민등록번호 확인
+			$('#jumin_no1').focusout(function() {
+				
+				var regExp1 = /\d{2}([0]\d|[1][0-2])([0][1-9]|[1-2]\d|[3][0-1])/;
+			
+				if(!regExp1.test($('#jumin_no1').val())) {
+					alert('잘못된 주민등록번호입니다.');
+				}
+			
+			})
+			
+			$('#jumin_no2').focusout(function() {
+				
+				var regExp2 = /[1-4]\d{6}/;
+				
+				if(!regExp2.test($('#jumin_no2').val())) {
+					alert('잘못된 주민등록번호입니다.');
+				}
+				
+			})
+			
+			
+			
+	 		// 졸업년도 option 생성
+	 		yearOption();
+			
+		
+			// ---------------- 조회한 정보 입력 --------------
+			
+			// 조회한 주민등록번호 입력
+			var jumin = '${staff.jumin_no}';
+			$('#jumin_no1').val(jumin.substring(0, 6));
+			$('#jumin_no2').val(jumin.substring(7, 14));
+			
+			
+			// 조회한 부서 입력
+			$('select[name=department_name] option').each(function() {
+				if($(this).val() == '${staff.department_name}') {
+					$(this).attr('selected', true);
+				}
+			});
+			
+			// 조회한 학력 입력
+			$('input[name=school_name]').each(function() {
+				if($(this).val() == '${staff.school_name}') {
+					$(this).attr('checked', true);
+				}
+			});
+			
+			// 조회한 기술 입력
+			var skills = [];
+			skills = '${staff.skill_name}';
+			skills = skills.replace('[', '');
+			skills = skills.replace(']', '');
+			var skillList = skills.split(', '); 
+
+			
+			var basicSkills = ['Java', 'JSP', 'ASP', 'PHP', 'Delphi'];
+			var addSkillList = [];
+			for(var i = 0; i < skillList.length; i++) {
+				if(basicSkills.indexOf(skillList[i]) > -1) {
+					$('input[value=' + skillList[i] + ']').attr('checked', true);
+				}
+				else {					
+					addSkillList.push(skillList[i]);
+				}
+			}
+
+			for(var i = 0; i < addSkillList.length; i++) {
+	    		$('#addSkills').append('<button type="button" onclick="removeSkill(this);">' + addSkillList[i] + '</button>');
+	    		$('#addSkillInput').append('<input type="hidden" name="skill_name" value="' + addSkillList[i] + '">');
+			}
+			
+			// 조회한 졸업년도 입력
+			var gday = '${ staff.graduate_day }';
+			gday = gday.trim().split('/');
+	
+			$('#year option').each(function() {
+				if($(this).val() == gday[0]) {
+					$(this).attr('selected', true);
+				}
+			});
+			$('#month option').each(function() {
+				if($(this).val() == gday[1]) {
+					$(this).attr('selected', true);
+				}
+			});
+			
+			
+			
+			
+	 		// 전체 기술 목록 불러오기
+	 		var addSkills = [];
+	 		
+			// 자동완성 실행
+	 		autocomplete(addSkills);
+
+			
+		});
+		
+		
+	 	// 졸업년도 option 생성
+	 	function yearOption() {
+		    var year =  new Date().getFullYear();
+			
+		    for(var i = 1950 ; i <= (year + 3) ; i++) {
+		        $('#year').append('<option value="' + i + '">' + i + '</option>');
+		    }
+	 		
+	 	}
+		
+		
+		
+		
+		
+		// ----------------- 자동완성 -----------------------
+		
+		
+	 	function autocomplete(addSkills) {
+	 		
+	 		selectSkills(addSkills);
+	 		
+			// 자동완성
+	 		$('#skillInputAuto').autocomplete({
+	 		    source: addSkills,
+	 		    focus: function (event, ui) {
+	 		    	return false;
+	 		    },
+	 		    select: function (event, ui) {},
+	 		    minLength: 1,
+	 		    delay: 100,
+	 		    autoFocus: true,
+	 		});
+	 		
+	 	}
+	 	
+	 	
+	 	// 자동완성을 위한 기술 목록 조회
+	 	function selectSkills(addSkills) {
+	 		$.ajax({
+	 			url : 'selectSkill.do',
+	 			type : 'post',
+	 			success : function(data) {
+					for(var i = 0; i < data.length; i++) {
+						addSkills.push(data[i]);
+					}
+	 			},
+	 			error : function() {
+	 				console.log('selectSkills AJAX 실행 오류');
+	 			}
+	 		});
+	 	}
+
+
+		// ------------------ 추가기술 -----------------------
+		
+		var inSkill = [];
+		
+		// 추가기술 추가
+		function addSkill(e) {
+    		
+    		let skill = $(e).prev().val();
+
+	   		if(skill == '') { // 입력하지 않고 버튼을 누르는 경우
+	   			alert('기술을 입력해주세요.');
+	   		}
+	   		else {
+	    		if(inSkill.indexOf(skill) != -1) {
+	    			alert('이미 추가한 기술입니다.');
+	    		}
+	    		else {
+	    			inSkill.push(skill); // 중복 확인을 위해 배열에 넣기
+		    		
+		    		$('#addSkills').append('<button type="button" onclick="removeSkill(this);">' + skill + '</button>');
+		    		$('#addSkillInput').append('<input type="hidden" name="skill_name" value="' + skill + '">');
+	    		}	    			
+	   		}
+	   		$(e).prev().val('');
+    	}	
+    
+    	// 추가기술 삭제
+    	function removeSkill(e) {
+    		
+    		let skills = $(e).siblings();
+    		let skillInputs = $('#addSkillInput input[value=' + $(e).text() + ']').siblings();
+    		$('#addSkills').html(skills);
+    		$('#addSkillInput').html(skillInputs);
+			inSkill.splice(inSkill.indexOf($(e).text()), 1);
+    	}
+    	
+    
+    
+   		
+   		// ---------------------- 등록 조건 확인 ----------------------
+   		
+   		// 이름 작성 확인
+   		function checkName() {
+   			if($('input[name=staff_name]').val() == '') {
+   				alert('이름을 입력해주세요.');
+   				return false;
+   			}
+   			return true;
+   		}
+   		
+		// 주민등록번호 확인 및 값 추출
+		function checkJumin() {
+			
+			if($('#jumin_no1').val() == '' || $('#jumin_no2').val() == '') {
+				alert('주민등록번호를 입력해주세요.');
+				return false;
+			}
+			
+			let jumin_no = '';
+			jumin_no += $('#jumin_no1').val() + '-' + $('#jumin_no2').val();
+			console.log(jumin_no);
+			$('#juminNo').val(jumin_no);
+			
+			return true;
+		}
+   		
+   		
+   		// 	부서 선택 확인
+   		function checkDepartment() {
+   			
+   			if($('select[name=department_name] option:selected').val() == '') {
+   				alert('부서를 선택해주세요.');
+   				return false;
+   			}
+			return true;       			
+   		};
+   		
+   		
+   		// 학력 선택 확인
+   		function checkSchool() {
+   			if($('input[name=school_name]:checked').length == 0) {
+   				alert('학력을 선택해주세요.');
+   				return false;
+   			}
+			return true;       			
+   		};
+   		
+   		
+   		
+   		// 기술 선택 확인
+		function checkSkill() {
+   			
+    		let flag = 0;
+    		
+    		$('.skillCheckbox').each(function() {
+   				if($(this).is(':checked')) {
+   					flag++;
+   				}        	
+    		});
+   			
+    		if(flag == 0) {
+				alert('기술을 선택해주세요.');        			
+    			return false;
+    		}
+    		
+    		return true;
+   		};
+   		
+   	    
+    	// 졸업년월 확인 및 추출
+   		function graduateDateCheck() {
+
+   			let graduateDay = '';
+   			graduateDay += $('#year option:selected').val() + '/' + $('#month option:selected').val();
+   			
+   			if(graduateDay.length < 7) {
+   				alert('졸업일을 선택해주세요');
+   				return false;
+   			}
+   			
+   			$('#graduateDay').val(graduateDay);
+   			return true;
+    	};
+   		
+
+   		
+    	
+    	
+    	// 조건 확인 후 form 태그 submit
+    	function updateFormSubmit() {
+    		let flag = checkName() && checkJumin() && checkDepartment() && checkSchool() && checkSkill() && graduateDateCheck();
+    		
+    		// 확인 완료 - 요청 보내기
+    		if(flag) {
+    			if(confirm('수정하시겠습니까?')) {
+        			$('#updateForm').submit();        				
+    			} else {
+    				alert('취소되었습니다.');
+    			}
+    			
+    		}
+    		else {
+    			console.log(flag);        			
+    		}
+    		
+    		
+    	};
+   		
+
+		
+    	
+		
+	
+	</script>
+
+
+	
+    
+    
+    
+    
+    
+    
 
 
 

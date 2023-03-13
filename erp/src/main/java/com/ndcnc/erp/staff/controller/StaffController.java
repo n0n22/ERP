@@ -32,9 +32,8 @@ public class StaffController {
 	// 사원 등록
 	@RequestMapping("staffInput.do")
 	public ModelAndView inputStaff(@ModelAttribute Staff newStaff, ModelAndView mv) {
-		System.out.println(newStaff);
 		
-		if(staffService.inputStaff(newStaff) > 0) {
+		if(staffService.inputStaff(newStaff) >= 2) {
 			mv.addObject("alertMsg", "등록되었습니다.").setViewName("staff_input_form");
 		} else {
 			mv.addObject("alertMsg", "등록에 실패하였습니다.");
@@ -47,12 +46,17 @@ public class StaffController {
 	// 전체 사원 검색
 	@ResponseBody
 	@RequestMapping(value="selectAll.do", produces="application/json; charset=UTF-8")
-	public String selectAll(@RequestParam int cpage) {
-		
-		PageInfo pi = getPageInfo(staffService.selectAllListCount(), cpage, 5, 5);
-		ArrayList<Staff> list = staffService.selectAllList(pi);
+	public String selectAll(@RequestParam int cpage,
+							@RequestParam String orderCondition,
+							@RequestParam String desc) {
 		
 		HashMap<String, Object> map = new HashMap();
+		map.put("orderCondition", orderCondition);
+		map.put("desc", desc);
+		
+		PageInfo pi = getPageInfo(staffService.selectAllListCount(), cpage, 5, 5);
+		ArrayList<Staff> list = staffService.selectAllList(map, pi);
+		
 		map.put("list", list);
 		map.put("pi", pi);
 
@@ -90,6 +94,7 @@ public class StaffController {
 	// 사원 정보 수정
 	@RequestMapping("updateStaff.do")
 	public ModelAndView updateStaff(@ModelAttribute Staff staff, ModelAndView mv) {
+		System.out.println(staff);
 		
 		if(staffService.updateStaff(staff) > 0) {
 			mv.addObject("staff", staffService.selectStaffInfo(staff.getStaff_no())).addObject("alertMsg", "수정이 완료되었습니다. 창을 닫으시겠습니까?");

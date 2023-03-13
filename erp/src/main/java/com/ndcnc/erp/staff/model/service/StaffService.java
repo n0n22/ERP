@@ -1,10 +1,12 @@
 package com.ndcnc.erp.staff.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ndcnc.erp.staff.model.dao.StaffDao;
 import com.ndcnc.erp.staff.model.vo.PageInfo;
@@ -21,8 +23,11 @@ public class StaffService {
 	private SqlSessionTemplate sqlSession;
 	
 	// 사원 등록 
+	@Transactional
 	public int inputStaff(Staff newStaff) {
-		return staffDao.inputStaff(newStaff, sqlSession);
+		return staffDao.insertStaff(newStaff, sqlSession)
+				+ staffDao.updateSkill(newStaff.getSkill_name(), sqlSession)
+				+ staffDao.insertStaffSkill(newStaff, sqlSession);
 	}
 	
 	// 사원 전체 목록 개수
@@ -31,8 +36,8 @@ public class StaffService {
 	}
 	
 	// 사원 전체 목록
-	public ArrayList<Staff> selectAllList(PageInfo pi) {
-		return staffDao.selectAllList(pi, sqlSession);
+	public ArrayList<Staff> selectAllList(HashMap<String, Object> selectMap, PageInfo pi) {
+		return staffDao.selectAllList(selectMap, pi, sqlSession);
 	}
 	
 	// 사원 검색 목록 개수
@@ -51,10 +56,14 @@ public class StaffService {
 	}
 	
 	// 사원 정보 수정
+	@Transactional
 	public int updateStaff(Staff staff) {
-		return staffDao.updateStaff(staff, sqlSession);
+		return staffDao.updateStaff(staff, sqlSession)
+				* staffDao.deleteStaffSkills(staff.getStaff_no(), sqlSession)
+				* staffDao.insertStaffSkill(staff, sqlSession);
 	}
 	
+	// 사원 정보 삭제
 	public int deleteStaff(int staff_no) {
 		return staffDao.deleteStaff(staff_no, sqlSession);
 	}

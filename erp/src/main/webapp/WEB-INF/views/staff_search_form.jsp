@@ -46,118 +46,6 @@
 
 </head>
 
-<script>
-
- 	
- 	
- 	$(function() {
-
- 		yearOption();
- 		
- 		$('#year1').change(function() {
- 			let selectYear = $('#year1 option:selected').val();
- 			console.log(selectYear);
- 			
- 			$('#year2 option').each(function() {
- 				if($(this).val() == selectYear) {
- 					$(this).attr('selected', true);
- 				}
- 			})
- 			
- 		});
- 		
- 		
- 		$('#month1').change(function() {
- 			let selectMonth = $('#month1 option:selected').val();
- 			
- 			
- 			$('#month2 option').each(function() {
- 				if($(this).val() == selectMonth) {
- 					$(this).attr('selected', true);
- 				}
- 			})
- 			
- 		});
-		
- 		
- 		
- 		// 전체 기술 목록 불러오기
- 		var addSkills = [];
- 		
- 		window.addEventListener('focus', function() {
- 			addSkills = [];
- 			selectSkills(addSkills);
- 			console.log(addSkills);
- 		}, false); 		
- 		
-		// 자동완성
- 		$('#skillInputAuto').autocomplete({
- 		    source: addSkills,
- 		    focus: function (event, ui) {
- 		    	return false;
- 		    },
- 		    select: function (event, ui) {},
- 		    minLength: 1,
- 		    delay: 100,
- 		    autoFocus: true,
- 		});
-
- 		
- 		
- 		
- 		
- 		
- 		
- 		
- 		
- 	});
- 	
- 	
- 	function selectSkills(addSkills) {
- 		
- 		$.ajax({
- 			url : 'selectSkill.do',
- 			type : 'post',
- 			success : function(data) {
-				for(var i = 0; i < data.length; i++) {
-					addSkills.push(data[i]);
-				}
- 			},
- 			error : function() {
- 				
- 			}
- 			
- 		});
- 	}
- 	
- 	
-    
- 	
- 	// 졸업년도 option 생성
- 	function yearOption() {
-	    var year =  new Date().getFullYear();
-		
-	    for(var i = (year-50) ; i <= (year + 3) ; i++) {
-	        $('#year1').append('<option value="' + i + '">' + i + '</option>');
-	        $('#year2').append('<option value="' + i + '">' + i + '</option>');
-	    }
- 		
- 	}
- 	
- 	
- 	
- 	
- 	
- 	
-	
- 	
-    
-
-	
-
-</script>
-
-
 
 
 
@@ -220,25 +108,24 @@
 	                            <select name="" id="year1">
 	                                <option></option>
 	                            </select>
-	                            년
+	                            	년
 	                            <select name="" id="month1">
 	                                <option></option>
 	                                <option>02</option>
 	                                <option>08</option>
 	                            </select>
-	                            월
+	                            	월
 	                            &nbsp;~&nbsp;
 	                            <select name="" id="year2">
 	                                <option></option>
 	                            </select>
-	                            년
+	                           		년
 	                            <select name="" id="month2">
 	                                <option></option>
 	                                <option>02</option>
 	                                <option>08</option>
 	                            </select>
-	                            월
-	
+	                            	월
 	                        </td>
 	                    </tr>
 	                    <tr>
@@ -248,8 +135,7 @@
 	                    		<button type="button" onclick="addSkill(this);">추가</button>
 	                    	</td>
 	                    	<td>
-	                    		<label><input type="radio" name="skillCondition" value="and"> and</label>
-	                    		<label><input type="radio" name="skillCondition" value="or"> or</label>
+	                    		<label><input type="checkbox" name="skillCondition" value="필수"> 필수</label>
 	                    	</td>
 	                    	<td colspan="3" id="addSkills">
                         		
@@ -258,7 +144,7 @@
 	                    <tr>
 	                    	<td colspan="6" align="center">
 	    							<button type="button" onclick="searchStaff(1);">검색</button>	 &nbsp;&nbsp;              	
-				                    <button type="reset" id="resetBtn">검색조건초기화</button>
+				                    <button type="button" id="resetBtn" onclick="resetAllCondition();">검색조건초기화</button>
 	                    	</td>
 	                    </tr>
 	                
@@ -271,7 +157,7 @@
 	    						<td>
 	    						</td>
 	    						<td>
-	    						    <button type="button" onclick="selectAll(1);">전부검색</button>
+	    						    <button type="button" onclick="selectAll('번호', 'desc', 1);">전부검색</button>
 				                    <button type="button" onclick="clearTable();">초기화</button>
 				                    <button type="button" onclick="openEnrollForm();">등록</button>
 	    						</td>
@@ -288,85 +174,13 @@
 	        
 	        </div>
 		</form>
-		<script>
-		
- 		
-	    	var inSkill =  [];
-	 		
-	    	// 추가기술 추가
-	    	function addSkill(e) {
-	    		let skill = $(e).prev().val();
-	    		
-	    		if(skill == '') {
-	    			alert('기술을 입력해주세요.');
-	    		}
-	    		else {
-		    		if(inSkill.indexOf(skill) != -1) {
-		    			alert('이미 추가한 기술입니다.');
-		    		}
-		    		else {
-		    			inSkill.push(skill);
-			    		
-			    		$('#addSkills').append('<button type="button" onclick="removeSkill(this);">' + skill + '</button>');
-			    		$('#addSkillInput').append('<input type="hidden" name="skill_name2" value="' + skill + '">');
-		    		}	    			
-	    		}
-	    		$(e).prev().val('');
-	    	}	
-	    
-	    	// 추가기술 삭제
-	    	function removeSkill(e) {
-	    		
-	    		let skills = $(e).siblings();
-	    		$('#addSkills').html(skills);
-	    	}
-	 		
-		
-			
-			function setGraduateDay() {
-				
-       			let graduateDay1 = '';
-       			let graduateDay2 = '';
-       			graduateDay1 += $('#year1 option:selected').val() + $('#month1 option:selected').val();
-       			graduateDay2 += $('#year2 option:selected').val() + $('#month2 option:selected').val();
-       			$('#graduateDay1').val(graduateDay1);
-       			$('#graduateDay2').val(graduateDay2);
-				
-			}
-			
-			function setJuminNo() {
-				
-				let flag = 0;
-				$('input[name=jumin]').each(function() {
-					if($(this).is(':checked')) {
-						flag++;
-					}		
-				})
-				
-				if(flag == 0 || flag == 2) {
-					$('#juminNo').val('all');
-				}
-				else {
-					$('#juminNo').val($('input[name=jumin]:checked').val());
-				}
-				
-			}
-			
-			function setCpage(cpage) {
-				$('#cpage').val(cpage);			
-			}
-		
-		
-		
-		
-		</script>
-		
-		
+
         <div class="body-area">
 
             <div class="list-area">
                 <div class="list-count">
                 	<span id="listCount"></span>
+                	<span id="orderSelect"></span>
                 </div>
                 <div class="list-order">
                 	
@@ -395,18 +209,118 @@
 
 
     </div>
-
-    <script>
     
+    
+    
+    
+	<script>
+	
+	 	
+	 	// 페이지 로딩 후 바로 실행
+	 	$(function() {
+	
+	 		// 졸업년도 option태그 생성
+	 		yearOption();
+	 		
+	 		
+	 		// 졸업년도1 선택하면 졸업년도2 변경
+	 		$('#year1').change(function() {
+	 			let selectYear = $('#year1 option:selected').val();
+	 			
+	 			$('#year2 option').each(function() {
+	 				if($(this).val() == selectYear) {
+	 					$(this).attr('selected', true);
+	 				}
+	 			})
+	 		});
+	 		
+	 		// 졸업월1 선택하면 졸업월2 변경
+	 		$('#month1').change(function() {
+	 			let selectMonth = $('#month1 option:selected').val();
+	 			
+	 			$('#month2 option').each(function() {
+	 				if($(this).val() == selectMonth) {
+	 					$(this).attr('selected', true);
+	 				}
+	 			})
+	 		});
+			
+	 		
+	 		
+	 		// 전체 기술 목록 불러오기
+	 		var addSkills = [];
+		
+	 		
+	 		/*
+	 		// 페이지에 돌아올 때마다 기술목록 조회 (등록 시 새로운 기술이 등록될 수 있으므로)
+	 		window.addEventListener('focus', function() {
+	 			addSkills = [];
+	 			selectSkills(addSkills);
+	 			console.log(addSkills);
+	 		}, false);
+			*/
+	 		
+			// 자동완성 실행
+	 		autocomplete(addSkills);
+	 		
+
+	 	});
+	 	
+	 	
+	 	function autocomplete(addSkills) {
+	 		
+	 		selectSkills(addSkills);
+	 		
+			// 자동완성
+	 		$('#skillInputAuto').autocomplete({
+	 		    source: addSkills,
+	 		    focus: function (event, ui) {
+	 		    	return false;
+	 		    },
+	 		    select: function (event, ui) {},
+	 		    minLength: 1,
+	 		    delay: 100,
+	 		    autoFocus: true,
+	 		});
+	 		
+	 	}
+	 	
+	 	
+	 	// 자동완성을 위한 기술 목록 조회
+	 	function selectSkills(addSkills) {
+	 		$.ajax({
+	 			url : 'selectSkill.do',
+	 			type : 'post',
+	 			success : function(data) {
+					for(var i = 0; i < data.length; i++) {
+						addSkills.push(data[i]);
+					}
+	 			},
+	 			error : function() {
+	 				console.log('selectSkills AJAX 실행 오류');
+	 			}
+	 		});
+	 	}
+	 	
+	 	// 졸업년도 option 생성
+	 	function yearOption() {
+		    var year =  new Date().getFullYear();
+			
+		    for(var i = 1950 ; i <= (year + 3) ; i++) {
+		        $('#year1').append('<option value="' + i + '">' + i + '</option>');
+		        $('#year2').append('<option value="' + i + '">' + i + '</option>');
+		    }
+	 		
+	 	}
+	 	
 		// 새창으로 등록폼 띄우기
         function openEnrollForm() {
-            window.open('staffInputForm.do', '등록', 'width=1250,height=400,location=yes,menubar=yes,scrollbar=no');
+            window.open('staffInputForm.do', '등록', 'width=1250, height=400, location=yes, menubar=yes, scrollbar=no');
         }
 		
 		// 새창으로 수정삭제폼 띄우기
 		function openUpdelForm(e) {
-			
-			window.open('', '수정/삭제', 'width=1250, height=400, location=yes,menubar=yes');
+			window.open('', '수정/삭제', 'width=1250, height=400, location=yes, menubar=yes, scrollbar=no');
 		
 			$('#staffNo').val($(e).parent().siblings().first().text());
 			
@@ -417,39 +331,36 @@
 			updelForm.submit();
 		}
 		
-		
-		
 		// 전체검색 AJAX
-		function selectAll(cpage) {
+		function selectAll(order, desc, cpage) {
 			
 			$('#resetBtn').click();
+			clearTable();
 
 			$.ajax({
 				
 				url : 'selectAll.do',
 				type : 'post',
-				data : {cpage: cpage},
+				data : {cpage: cpage, orderCondition: order, desc: desc},
 				success : function(map) {
-
 					// 검색 결과 처리
 					setList(map);
-					
-					// 페이징 처리
-					pagination(map.pi, 'selectAll');
-					
+					if(map.list.length != 0) {
+						// 페이징 처리
+						pagination(map.pi, 'selectAll');
+					}
 				},
 				error : function() {
 					console.log('selectAll AJAX 오류');
 				}
-				
 			});
 		};
-		
-
-		
+				
 		
 		// 검색
 		function searchStaff(cpage) {
+			
+			clearTable();
 			
 			setGraduateDay();
 			setJuminNo();
@@ -460,30 +371,28 @@
 				type : 'post',
 				data : $('#searchConditionForm').serialize(),
 				success : function(map) {
-					
 					// 검색 결과 처리
 					setList(map);
-					
-					// 페이징 처리
-					pagination(map.pi, 'searchStaff');
-					
+					if(map.list.length != 0) {
+						// 페이징 처리
+						pagination(map.pi, 'searchStaff');
+					}
 				},
 				error : function() {
 					console.log('searchStaff AJAX 오류');
 				}				
-				
 			});
-			
 		};
 		
 		
 		
-		// 검색 결과 처리
+		// 검색 결과 목록 처리
 		function setList(map) {
 			
 			// 전체 검색 건수 추가
 			$('#listCount').text('총 ' + map.pi.listCount + '건');
-			// 테이블 머리 추가
+
+			// 테이블 머리 추가           
 			let tableHead = '<tr>' 
 							+ '<th>번호</th>'
 							+ '<th>이름</th>' 
@@ -494,6 +403,16 @@
 						  + '</tr>'
 			
 			$('#listTable thead').html(tableHead);
+			
+			$('#listTable thead th').each(function() {
+				if($(this).text() == map.orderCondition && map.desc == 'desc') {
+					$(this).append('<span>▼</span>');
+				} 
+				else if ($(this).text() == map.orderCondition) {
+					$(this).append('<span>▲</span>');
+				}
+			})
+			
 			// 테이블 컬럼 추가
 			var str = '';
 			if(map.list.length != 0) {
@@ -509,13 +428,11 @@
 				}
 			}
 			else {
-				str += '<tr><td colspan="6">조회된 결과가 없습니다.<td></tr>'
+				str += '<tr><td colspan="6">조회된 결과가 없습니다.</td></tr>'
 			}
 			$('#listTable tbody').html(str);
 			
 		}
-		
-		
 		
 		// 페이징 처리
 		function pagination(pi, str) {
@@ -553,7 +470,6 @@
 			// 영역에 추가
 			$('#pageArea').html(pageStr);
 		}
-
 		
 		// 초기화
 		function clearTable() {
@@ -564,17 +480,113 @@
 			$('#pageArea').html('');
 			
 		}
-		
-		/*
-		// 해당 창으로 돌아왔을때, 실행시킴
-		window.addEventListener('focus', function() {
-			selectAll(1);
-		}, false);
-		*/
-		
 
+		
+		// 추가 기술을 담을 배열
+	   	var inSkill = [];
+			
+	   	// 추가 기술 추가 버튼 클릭 시 버튼 생성
+	   	function addSkill(e) {
+	   		let skill = $(e).prev().val();
+	   		
+	   		if(skill == '') { // 입력하지 않고 버튼을 누르는 경우
+	   			alert('기술을 입력해주세요.');
+	   		}
+	   		else {
+	    		if(inSkill.indexOf(skill) != -1) {
+	    			alert('이미 추가한 기술입니다.');
+	    		}
+	    		else {
+	    			inSkill.push(skill); // 중복 확인을 위해 배열에 넣기
+		    		
+		    		$('#addSkills').append('<button type="button" onclick="removeSkill(this);">' + skill + '</button>');
+		    		$('#addSkillInput').append('<input type="hidden" name="skill_name2" value="' + skill + '">');
 
-    </script>
+	    		}	    			
+	   		}
+	   		$(e).prev().val('');
+	   	}	
+	   
+	   	// 추가기술 삭제
+	   	function removeSkill(e) {
+	   		let skills = $(e).siblings();
+	   		let skillInput = $('#addSkillInput input[value=' + $(e).text() + ']').siblings();
+	   		$('#addSkills').html(skills);
+	   		$('#addSkillInput').html(skillInput);
+	   		inSkill.splice(inSkill.indexOf($(e).text()), 1);
+	   	}
+			
+		// 선택한 졸업년도를 input type=hidden에 넣기
+		function setGraduateDay() {
+			
+   			let graduateDay1 = '';
+   			let graduateDay2 = '';
+   			graduateDay1 += $('#year1 option:selected').val() + $('#month1 option:selected').val();
+   			graduateDay2 += $('#year2 option:selected').val() + $('#month2 option:selected').val();
+   			
+   			if(!(graduateDay1 <= graduateDay2)) {
+   				alert("올바른 졸업년도를 입력하세요.");
+   			}
+   			else {
+	   			$('#graduateDay1').val(graduateDay1);
+	   			$('#graduateDay2').val(graduateDay2);
+   			}   			
+		}
+		
+		// 선택한 성별을 input type=hidden에 넣기
+		function setJuminNo() {
+			
+			let flag = 0;
+			$('input[name=jumin]').each(function() {
+				if($(this).is(':checked')) {
+					flag++;
+				}		
+			})
+			
+			if(flag == 0 || flag == 2) {
+				$('#juminNo').val('all');
+			}
+			else {
+				$('#juminNo').val($('input[name=jumin]:checked').val());
+			}
+			
+		}
+		
+		// 선택한 현재 페이지를 input type=hidden에 넣기 - VO 변수에 담기 위해서
+		function setCpage(cpage) {
+			$('#cpage').val(cpage);
+		}
+		
+		// 검색조건 초기화
+		function resetAllCondition() {
+			
+			$('#searchConditionForm input[type=text]').each(function() {
+				$(this).val('');
+			}) 
+			
+			$('#searchConditionForm input[type=checkbox], #searchConditionForm input[type=radio]').each(function() {
+				$(this).attr('checked', false);
+			})
+			
+			$('#searchConditionForm option').each(function() {
+				$(this).attr('selected', false);
+			})
+			
+			inSkill = [];
+			
+			$('#addSkillInput').html('');
+			$('#addSkills').html('');	
+			
+			
+		}
+	
+	
+	
+	</script>
+		
+		
+    
+    
 
 
 </body>

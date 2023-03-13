@@ -1,11 +1,12 @@
 package com.ndcnc.erp.staff.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.ndcnc.erp.staff.model.vo.PageInfo;
 import com.ndcnc.erp.staff.model.vo.SearchCondition;
@@ -16,12 +17,20 @@ public class StaffDao {
 
 	
 	// 사원 등록
-	@Transactional
-	public int inputStaff(Staff newStaff, SqlSessionTemplate sqlSession) {
-		sqlSession.update("staffMapper.updateSkill", newStaff.getSkill_name());
-		return sqlSession.insert("staffMapper.insertStaff", newStaff)
-				* sqlSession.insert("staffMapper.insertStaffSkill", newStaff);
+	public int insertStaff(Staff newStaff, SqlSessionTemplate sqlSession) {
+		return sqlSession.insert("staffMapper.insertStaff", newStaff);
 	}
+	
+	// 기술 등록
+	public int updateSkill(List<String> staff_name, SqlSessionTemplate sqlSession) {
+		return sqlSession.update("staffMapper.updateSkill", staff_name);
+	}
+	
+	// 사원 기술 등록
+	public int insertStaffSkill(Staff newStaff, SqlSessionTemplate sqlSession) {
+		return sqlSession.insert("staffMapper.insertStaffSkill", newStaff);
+	}
+	
 	
 	
 	// 사원 전체 목록 개수
@@ -30,12 +39,12 @@ public class StaffDao {
 	}
 	
 	// 사원 전체 목록
-	public ArrayList<Staff> selectAllList(PageInfo pi, SqlSessionTemplate sqlSession) {
+	public ArrayList<Staff> selectAllList(HashMap<String, Object> selectMap, PageInfo pi, SqlSessionTemplate sqlSession) {
 		
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
 		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
 		
-		return (ArrayList)sqlSession.selectList("staffMapper.selectAllList", null, rowBounds);
+		return (ArrayList)sqlSession.selectList("staffMapper.selectAllList", selectMap, rowBounds);
 	}
 	
 	// 사원 검색 목록 개수
@@ -58,11 +67,13 @@ public class StaffDao {
 	}
 	
 	// 사원 정보 수정
-	@Transactional
 	public int updateStaff(Staff staff, SqlSessionTemplate sqlSession) {
-		return sqlSession.update("staffMapper.updateStaff", staff)
-			   * sqlSession.delete("staffMapper.deleteStaffSkills", staff.getStaff_no())
-			   * sqlSession.insert("staffMapper.insertStaffSkill", staff);
+		return sqlSession.update("staffMapper.updateStaff", staff);
+	}
+	
+	// 이전 기술 삭제
+	public int deleteStaffSkills(int staff_no, SqlSessionTemplate sqlSession) {
+		return sqlSession.delete("staffMapper.deleteStaffSkills", staff_no);
 	}
 	
 	// 사원 정보 삭제
