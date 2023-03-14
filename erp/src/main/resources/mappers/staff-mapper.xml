@@ -174,20 +174,29 @@
 			    where skill_code in (select skill_code from code_skill where skill_name = #{item})
             </foreach>
 		</if>
-		<if test="skillCondition == 'and'">
+		<if test="skill_name2 != null">
 		   AND STAFF_NO IN
-		    <foreach collection="skill_name2" item="item" index="index" separator="INTERSECT" open="(" close=")">
-			   select staff_no
-			     from staff_skill
-			    where skill_code in (select skill_code from code_skill where skill_name = #{item})
-            </foreach>
+			<choose>
+				<when test="skillCondition == '필수'">
+					<foreach collection="skill_name2" item="item" index="index" separator="INTERSECT" open="(" close=")">
+					   select staff_no
+					     from staff_skill
+					    where skill_code in (select skill_code from code_skill where skill_name = #{item})
+		            </foreach>
+				</when>
+				<otherwise>
+					(select staff_no
+					  from staff_skill
+					 where skill_code in (select skill_code from code_skill where skill_name in 
+					<foreach collection="skill_name2" item="item" index="index" separator="," open="(" close=")))">
+                       #{item}
+            		</foreach>
+				</otherwise>
+			</choose>
 		</if>
 		<if test="graduate_day1 != ''">
 		   AND GRADUATE_DAY BETWEEN #{graduate_day1} AND #{graduate_day2}
 		</if>
-		 ORDER
-		    BY
-		       STAFF_NO DESC
 	</select>
 
 	<!-- 사원 검색 목록 -->
@@ -225,20 +234,45 @@
 			    where skill_code in (select skill_code from code_skill where skill_name = #{item})
             </foreach>
 		</if>
-		<if test="skillCondition == '필수'">
+		<if test="skill_name2 != null">
 		   AND STAFF_NO IN
-		    <foreach collection="skill_name2" item="item" index="index" separator="INTERSECT" open="(" close=")">
-			   select staff_no
-			     from staff_skill
-			    where skill_code in (select skill_code from code_skill where skill_name = #{item})
-            </foreach>
+			<choose>
+				<when test="skillCondition == '필수'">
+					<foreach collection="skill_name2" item="item" index="index" separator="INTERSECT" open="(" close=")">
+					   select staff_no
+					     from staff_skill
+					    where skill_code in (select skill_code from code_skill where skill_name = #{item})
+		            </foreach>
+				</when>
+				<otherwise>
+					(select staff_no
+					  from staff_skill
+					 where skill_code in (select skill_code from code_skill where skill_name in 
+					<foreach collection="skill_name2" item="item" index="index" separator="," open="(" close=")))">
+                       #{item}
+            		</foreach>
+				</otherwise>
+			</choose>
 		</if>
 		<if test="graduate_day1 != ''">
 		   AND GRADUATE_DAY BETWEEN #{graduate_day1} AND #{graduate_day2}
 		</if>
 		 ORDER
 		    BY
-		       STAFF_NO DESC
+		<choose>
+			<when test="orderCondition == '번호'">
+				staff_no
+			</when>
+			<when test="orderCondition == '이름'">
+				staff_name
+			</when>
+			<when test="orderCondition == '졸업일'">
+				graduate_day
+			</when>
+		</choose>
+		<if test="desc == 'desc'">
+			 DESC		
+		</if>
 	</select>
 
 	

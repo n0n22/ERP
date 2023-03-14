@@ -13,8 +13,10 @@
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <style>
+
     .outer {
         width: 1200px;
+        padding: 10px;
     }
     
 
@@ -37,7 +39,7 @@
                 <table id="insert-table" class="table table-bordered">
                     <thead>
                         <tr>
-                            <th colspan="6" class="color">사원 정보 등록</th>
+                            <th colspan="6" class="color"><h4>사원 정보 수정/삭제</h4></th>
                         </tr>
                     </thead>
                     <tbody>

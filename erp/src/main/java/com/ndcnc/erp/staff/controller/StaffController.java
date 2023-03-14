@@ -73,6 +73,8 @@ public class StaffController {
 		ArrayList<Staff> list = staffService.selectStaff(sc, pi);
 		
 		HashMap<String, Object> map = new HashMap();
+		map.put("orderCondition", sc.getOrderCondition());
+		map.put("desc", sc.getDesc());
 		map.put("list", list);
 		map.put("pi", pi);
 		

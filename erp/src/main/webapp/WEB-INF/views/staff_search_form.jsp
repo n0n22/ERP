@@ -15,10 +15,10 @@
 <style>
 
     .outer {
-        width: 1200px;
+        width: 1500px;
+        padding: 10px;
     }
-	
-	
+
 	.search-area, .body-area {
 		width: 900px;
 		margin: auto;
@@ -30,7 +30,11 @@
 	}
 	
 	a {
-		text-decorate: none;
+		text-decoration: none;
+		color: black;
+	}
+	
+	a:hover {
 		color: black;
 	}
 	
@@ -38,7 +42,33 @@
 	.list-page-area {
 		text-align: center;
 	}
+	
+	
+	.orderChange:hover {
+		cursor: pointer;
+	}
+	
+	.list-page-area {
+		padding: 10px;
+		font-size: 17px;
+	}
 
+	.list-count {
+		padding: 5px;
+		margin: 2px;
+	}
+	
+	#listCount {
+		font: 17px bold;
+	}
+
+	button {
+		margin: 3px;
+	}
+
+	th {
+		text-align: center;
+	}
 
 
 </style>
@@ -132,7 +162,7 @@
 	                    	<th>추가기술</th>
 	                    	<td>
 	                    		<input type="text" id="skillInputAuto">
-	                    		<button type="button" onclick="addSkill(this);">추가</button>
+	                    		<button type="button" class="btn btn-sm btn-outline-secondary" onclick="addSkill(this);">추가</button>
 	                    	</td>
 	                    	<td>
 	                    		<label><input type="checkbox" name="skillCondition" value="필수"> 필수</label>
@@ -143,8 +173,8 @@
 	                    </tr>
 	                    <tr>
 	                    	<td colspan="6" align="center">
-	    							<button type="button" onclick="searchStaff(1);">검색</button>	 &nbsp;&nbsp;              	
-				                    <button type="button" id="resetBtn" onclick="resetAllCondition();">검색조건초기화</button>
+	    							<button type="button" class="btn btn-sm btn-outline-secondary" onclick="searchStaff('번호', 'desc', 1);">검색하기</button>	 &nbsp;&nbsp;              	
+				                    <button type="button" class="btn btn-sm btn-outline-secondary" id="resetBtn" onclick="resetAllCondition();">검색조건초기화</button>
 	                    	</td>
 	                    </tr>
 	                
@@ -157,9 +187,9 @@
 	    						<td>
 	    						</td>
 	    						<td>
-	    						    <button type="button" onclick="selectAll('번호', 'desc', 1);">전부검색</button>
-				                    <button type="button" onclick="clearTable();">초기화</button>
-				                    <button type="button" onclick="openEnrollForm();">등록</button>
+	    						    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="selectAll('번호', 'desc', 1);">전부검색</button>
+				                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clearTable();">초기화</button>
+				                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="openEnrollForm();">등록</button>
 	    						</td>
 	    					</tr>
 	    				</table>
@@ -170,6 +200,9 @@
 	        <input type="hidden" id="graduateDay1" name="graduate_day1">
 	        <input type="hidden" id="graduateDay2" name="graduate_day2">
 	        <input type="hidden" id="cpage" name="cpage">
+	        <input type="hidden" id="orderCondition" name="orderCondition">
+	        <input type="hidden" id="desc" name="desc">
+	        
 	        <div id="addSkillInput">
 	        
 	        </div>
@@ -180,7 +213,6 @@
             <div class="list-area">
                 <div class="list-count">
                 	<span id="listCount"></span>
-                	<span id="orderSelect"></span>
                 </div>
                 <div class="list-order">
                 	
@@ -218,6 +250,7 @@
 	 	
 	 	// 페이지 로딩 후 바로 실행
 	 	$(function() {
+	 		
 	
 	 		// 졸업년도 option태그 생성
 	 		yearOption();
@@ -362,24 +395,31 @@
 				
 		
 		// 검색
-		function searchStaff(cpage) {
+		function searchStaff(order, desc, cpage) {
+			
+			checkSkills();
 			
 			clearTable();
 			
 			setGraduateDay();
 			setJuminNo();
 			setCpage(cpage);
+			setOrder(order);
+			setDesc(desc);
+			
+			
 			
 			$.ajax({
 				url : 'searchStaff.do',
 				type : 'post',
 				data : $('#searchConditionForm').serialize(),
 				success : function(map) {
+					map.str =  'searchStaff';
 					// 검색 결과 처리
 					setList(map);
 					if(map.list.length != 0) {
 						// 페이징 처리
-						pagination(map.pi, 'searchStaff');
+						pagination(map);
 					}
 				},
 				error : function() {
@@ -392,33 +432,39 @@
 		
 		// 검색 결과 목록 처리
 		function setList(map) {
-			
+
 			// 전체 검색 건수 추가
 			$('#listCount').text('총 ' + map.pi.listCount + '건');
 			
-			let method = '';
-			method += map.str + "('" + map.orderCondition + "','" + map.desc + "',1)";
-			console.log(method);
-			
+			if(map.desc == 'asc') map.desc = 'desc';
+			else map.desc = 'asc';
+
 			// 테이블 머리 추가           
-			let tableHead = '<tr>' 
-							+ '<th>번호</th>'
-							+ '<th>이름</th>' 
+			let tableHead = '<tr class="text-center">' 
+							+ '<th onclick="' + map.str + '(' + "'번호'" + ',' + "'" + map.desc + "',1);" + '" class="orderChange">번호</th>'
+							+ '<th onclick="' + map.str + '(' + "'이름'" + ',' + "'" + map.desc + "',1);" + '" class="orderChange">이름</th>' 
 							+ '<th>성별</th>'
 							+ '<th>부서</th>'
-							+ '<th>졸업일</th>'
+							+ '<th onclick="' + map.str + '(' + "'졸업일'" + ',' + "'" + map.desc + "',1);" + '" class="orderChange">졸업일</th>'
 							+ '<th></th>'
 						  + '</tr>'
 			
 			$('#listTable thead').html(tableHead);
+						  
+		  	if(map.desc == 'asc') map.desc = 'desc';
+			else map.desc = 'asc';
 			
 			$('#listTable thead th').each(function() {
 				if($(this).text() == map.orderCondition && map.desc == 'desc') {
 					$(this).append('<span>▼</span>');
 				} 
-				else if ($(this).text() == map.orderCondition) {
+				else if($(this).text() == map.orderCondition) {
 					$(this).append('<span>▲</span>');
 				}
+				else if($(this).is('.orderChange')) {
+					$(this).append('<span>◀</span>')
+				}
+				
 			})
 			
 			// 테이블 컬럼 추가
@@ -426,14 +472,15 @@
 			if(map.list.length != 0) {
 				for(var i = 0; i < map.list.length ;i++) {
 					str += '<tr>'
-							+ '<td>' + map.list[i].staff_no + '</td>'
+							+ '<td class="text-center">' + map.list[i].staff_no + '</td>'
 							+ '<td>' + map.list[i].staff_name + '</td>'
 							+ '<td>' + map.list[i].jumin_no + '</td>'
 							+ '<td>' + map.list[i].department_name + '</td>'
 							+ '<td>' + map.list[i].graduate_day + '</td>'
-							+ '<td><button type="button" onclick="openUpdelForm(this);">수정/삭제</button></td>'
+							+ '<td class="text-center"><button type="button" class="btn btn-sm btn-outline-secondary" onclick="openUpdelForm(this);">수정/삭제</button></td>'
 						+ '</tr>';						
-				}
+				}		
+				
 			}
 			else {
 				str += '<tr><td colspan="6">조회된 결과가 없습니다.</td></tr>'
@@ -447,8 +494,8 @@
 
 			let method = '';
 			method += map.str + "('" + map.orderCondition + "','" + map.desc + "',";
-			let pageStr = '';
 			
+			let pageStr = '';
 			// 첫 페이지 버튼
 			pageStr += '<a href="#" onclick="' + method + '1);return false">처음</a>&nbsp;';
 			// pageStr += `<a href="#" onclick="${map.str}(${map.orderCondition}, ${map.desc}, 1); return false">처음</a>`;
@@ -510,7 +557,7 @@
 	    		else {
 	    			inSkill.push(skill); // 중복 확인을 위해 배열에 넣기
 		    		
-		    		$('#addSkills').append('<button type="button" onclick="removeSkill(this);">' + skill + '</button>');
+		    		$('#addSkills').append('<button type="button" class="btn btn-sm btn-outline-secondary" onclick="removeSkill(this);">' + skill + '</button>');
 		    		$('#addSkillInput').append('<input type="hidden" name="skill_name2" value="' + skill + '">');
 
 	    		}	    			
@@ -567,6 +614,26 @@
 		function setCpage(cpage) {
 			$('#cpage').val(cpage);
 		}
+		
+		// 선택한 정렬을 input type=hidden에 넣기
+		function setOrder(order) {
+			$('#orderCondition').val(order);
+		}
+		
+		// 선택한 정렬 차순을 input type=hidden에 넣기
+		function setDesc(desc) {
+			$('#desc').val(desc);
+		}
+		
+		// 필수를 체크하고 검색했을때 추가기술을 입력했는지 확인
+		function checkSkills() {
+			if($('input[value=필수]').is(':checked') && $('#addSkills').children().length == 0) {
+				alert('추가기술을 입력해주세요.');
+			}
+		}
+		
+		
+		
 		
 		// 검색조건 초기화
 		function resetAllCondition() {

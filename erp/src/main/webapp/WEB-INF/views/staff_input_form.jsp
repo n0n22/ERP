@@ -14,12 +14,18 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <style>
 
-    .outer {
+	.outer {
         width: 1200px;
+        padding: 10px;
     }
     
+	button {
+		margin: 3px;
+	}
 
-
+	th {
+		text-align: center;
+	}
 
 
 
@@ -104,8 +110,8 @@
                         <tr>
                         	<th>추가기술</th>
                         	<td>
-                        		<input type="text" id="skillInputAuto">
-                        		<button type="button" onclick="addSkill(this);">추가</button>
+								<input type="text" id="skillInputAuto">
+								<button type="button" class="btn btn-sm btn-outline-secondary" onclick="addSkill(this);">추가</button>
                         	</td>
                         	<td colspan="4" id="addSkills">
                         		
@@ -114,8 +120,8 @@
                     </tbody>
                 </table>
                 <div class="button-area">
-                    <button type="button" onclick="inputSubmit();">등록</button>
-                    <button type="reset">초기화</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="inputSubmit();">등록</button>
+                    <button type="reset" class="btn btn-sm btn-outline-secondary">초기화</button>
                 </div>
 				<div id="addSkillInput">
 				
@@ -244,7 +250,7 @@
 	    		else {
 	    			inSkill.push(skill); // 중복 확인을 위해 배열에 넣기
 		    		
-		    		$('#addSkills').append('<button type="button" onclick="removeSkill(this);">' + skill + '</button>');
+		    		$('#addSkills').append('<button type="button" class="btn btn-sm btn-outline-secondary" onclick="removeSkill(this);">' + skill + '</button>');
 		    		$('#addSkillInput').append('<input type="hidden" name="skill_name" value="' + skill + '">');
 	    		}	    			
 	   		}
@@ -357,19 +363,9 @@
     		let flag = checkName() && checkJumin() && checkDepartment() && checkSchool() && checkSkill() && graduateDateCheck();
     		
     		// 확인 완료 - 요청 보내기
-    		if(flag) {
-    			if(confirm('저장하시겠습니까?')) {
-        			$('#inputForm').submit();        				
-    			} else {
-    				alert('취소되었습니다.');
-    			}
-    			
-    		}
-    		else {
-    			console.log(flag);        			
-    		}
-    		
-    		
+    		if(flag && confirm('저장하시겠습니까?')) {
+				$('#inputForm').submit();        				
+			}
     	};
    		
 
