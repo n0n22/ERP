@@ -18,8 +18,18 @@
         width: 1200px;
         padding: 10px;
     }
-    
 
+	button {
+		margin: 3px;
+	}
+
+	th {
+		text-align: center;
+	}
+
+	.button-area {
+		text-align: center;
+	}
 
 
 
@@ -39,7 +49,7 @@
                 <table id="insert-table" class="table table-bordered">
                     <thead>
                         <tr>
-                            <th colspan="6" class="color"><h4>사원 정보 수정/삭제</h4></th>
+                            <th colspan="6" class="color"><h4>사원 정보 확인</h4></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -104,7 +114,7 @@
                         	<th>추가기술</th>
                         	<td>
                         		<input type="text" id="skillInputAuto">
-                        		<button type="button" onclick="addSkill(this);">추가</button>
+                        		<button type="button" class="btn btn-sm btn-outline-secondary" onclick="addSkill(this);">추가</button>
                         	</td>
                         	<td colspan="4" id="addSkills">
                         		
@@ -113,8 +123,8 @@
                     </tbody>
                 </table>
                 <div class="button-area">
-                    <button type="button" onclick="updateFormSubmit();">수정</button>
-                    <button type="button" onclick="deleteFormSubmit();">삭제</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="updateFormSubmit();">수정</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="deleteFormSubmit();">삭제</button>
                 </div>
                 <div id="addSkillInput">
 				
@@ -217,7 +227,7 @@
 			}
 
 			for(var i = 0; i < addSkillList.length; i++) {
-	    		$('#addSkills').append('<button type="button" onclick="removeSkill(this);">' + addSkillList[i] + '</button>');
+	    		$('#addSkills').append('<button type="button"  class="btn btn-sm btn-light" onclick="removeSkill(this);">' + addSkillList[i] + '</button>');
 	    		$('#addSkillInput').append('<input type="hidden" name="skill_name" value="' + addSkillList[i] + '">');
 			}
 			
@@ -253,7 +263,7 @@
 	 	function yearOption() {
 		    var year =  new Date().getFullYear();
 			
-		    for(var i = 1950 ; i <= (year + 3) ; i++) {
+		    for(var i = 1980 ; i <= (year + 3) ; i++) {
 		        $('#year').append('<option value="' + i + '">' + i + '</option>');
 		    }
 	 		
@@ -321,7 +331,7 @@
 	    		else {
 	    			inSkill.push(skill); // 중복 확인을 위해 배열에 넣기
 		    		
-		    		$('#addSkills').append('<button type="button" onclick="removeSkill(this);">' + skill + '</button>');
+		    		$('#addSkills').append('<button type="button" class="btn btn-sm btn-light" onclick="removeSkill(this);">' + skill + '</button>');
 		    		$('#addSkillInput').append('<input type="hidden" name="skill_name" value="' + skill + '">');
 	    		}	    			
 	   		}

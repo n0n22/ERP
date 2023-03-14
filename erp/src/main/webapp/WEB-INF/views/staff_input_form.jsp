@@ -27,6 +27,9 @@
 		text-align: center;
 	}
 
+	.button-area {
+		text-align: center;
+	}
 
 
 </style>
@@ -136,7 +139,7 @@
    	<!-- 등록 후 확인 창 띄우기 -->
    	<c:if test="${not empty alertMsg}">
    		<script>
-   			alert('${ alertMsg }');      		
+   			alert('${ alertMsg }');    		
    			window.close();
    		</script>
    	</c:if>
@@ -183,7 +186,7 @@
 	 	function yearOption() {
 		    var year =  new Date().getFullYear();
 			
-		    for(var i = 1950 ; i <= (year + 3) ; i++) {
+		    for(var i = 1980 ; i <= (year + 3) ; i++) {
 		        $('#year').append('<option value="' + i + '">' + i + '</option>');
 		    }
 	 		
@@ -250,7 +253,7 @@
 	    		else {
 	    			inSkill.push(skill); // 중복 확인을 위해 배열에 넣기
 		    		
-		    		$('#addSkills').append('<button type="button" class="btn btn-sm btn-outline-secondary" onclick="removeSkill(this);">' + skill + '</button>');
+		    		$('#addSkills').append('<button type="button" class="btn btn-sm btn-light" onclick="removeSkill(this);">' + skill + '</button>');
 		    		$('#addSkillInput').append('<input type="hidden" name="skill_name" value="' + skill + '">');
 	    		}	    			
 	   		}

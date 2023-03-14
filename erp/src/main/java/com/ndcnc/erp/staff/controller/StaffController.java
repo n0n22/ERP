@@ -68,7 +68,7 @@ public class StaffController {
 	@ResponseBody
 	@RequestMapping(value="searchStaff.do", produces="application/json; charset=UTF-8")
 	public String selectStaff(@ModelAttribute SearchCondition sc) {
-
+		
 		PageInfo pi = getPageInfo(staffService.selectStaffCount(sc), sc.getCpage(), 5, 5);
 		ArrayList<Staff> list = staffService.selectStaff(sc, pi);
 		

@@ -339,7 +339,7 @@
 	 	function yearOption() {
 		    var year =  new Date().getFullYear();
 			
-		    for(var i = 1950 ; i <= (year + 3) ; i++) {
+		    for(var i = 1980 ; i <= (year + 3) ; i++) {
 		        $('#year1').append('<option value="' + i + '">' + i + '</option>');
 		        $('#year2').append('<option value="' + i + '">' + i + '</option>');
 		    }
@@ -348,12 +348,12 @@
 	 	
 		// 새창으로 등록폼 띄우기
         function openEnrollForm() {
-            window.open('staffInputForm.do', '등록', 'width=1250, height=400, location=yes, menubar=yes, scrollbar=no');
+            window.open('staffInputForm.do', '등록', 'width=1250, height=500, location=yes, menubar=yes, scrollbar=no');
         }
 		
 		// 새창으로 수정삭제폼 띄우기
 		function openUpdelForm(e) {
-			window.open('', '수정/삭제', 'width=1250, height=400, location=yes, menubar=yes, scrollbar=no');
+			window.open('', '수정/삭제', 'width=1250, height=500, location=yes, menubar=yes, scrollbar=no');
 		
 			$('#staffNo').val($(e).parent().siblings().first().text());
 			
@@ -436,6 +436,7 @@
 			// 전체 검색 건수 추가
 			$('#listCount').text('총 ' + map.pi.listCount + '건');
 			
+			// th에 함수를 넣기 위해 정렬을 반대 차순으로 바꿈
 			if(map.desc == 'asc') map.desc = 'desc';
 			else map.desc = 'asc';
 
@@ -450,26 +451,28 @@
 						  + '</tr>'
 			
 			$('#listTable thead').html(tableHead);
-						  
-		  	if(map.desc == 'asc') map.desc = 'desc';
-			else map.desc = 'asc';
 			
-			$('#listTable thead th').each(function() {
-				if($(this).text() == map.orderCondition && map.desc == 'desc') {
-					$(this).append('<span>▼</span>');
-				} 
-				else if($(this).text() == map.orderCondition) {
-					$(this).append('<span>▲</span>');
-				}
-				else if($(this).is('.orderChange')) {
-					$(this).append('<span>◀</span>')
-				}
-				
-			})
-			
-			// 테이블 컬럼 추가
 			var str = '';
 			if(map.list.length != 0) {
+
+				// th에 정렬 보여줄 버튼을 넣기 위해 기존의 차순으로 바꿈
+			  	if(map.desc == 'asc') map.desc = 'desc';
+				else map.desc = 'asc';
+				
+				// 정렬 차순 확인 span 생성
+				$('#listTable thead th').each(function() {
+					if($(this).text() == map.orderCondition && map.desc == 'desc') {
+						$(this).append('<span>▼</span>');
+					} 
+					else if($(this).text() == map.orderCondition) {
+						$(this).append('<span>▲</span>');
+					}
+					else if($(this).is('.orderChange')) {
+						$(this).append('<span>◁</span>')
+					}
+				})
+			
+				// 테이블 컬럼 추가
 				for(var i = 0; i < map.list.length ;i++) {
 					str += '<tr>'
 							+ '<td class="text-center">' + map.list[i].staff_no + '</td>'
@@ -557,7 +560,7 @@
 	    		else {
 	    			inSkill.push(skill); // 중복 확인을 위해 배열에 넣기
 		    		
-		    		$('#addSkills').append('<button type="button" class="btn btn-sm btn-outline-secondary" onclick="removeSkill(this);">' + skill + '</button>');
+		    		$('#addSkills').append('<button type="button" class="btn btn-sm btn-light" onclick="removeSkill(this);">' + skill + '</button>');
 		    		$('#addSkillInput').append('<input type="hidden" name="skill_name2" value="' + skill + '">');
 
 	    		}	    			
