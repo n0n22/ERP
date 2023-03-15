@@ -310,7 +310,6 @@
 	 		    focus: function (event, ui) {
 	 		    	return false;
 	 		    },
-	 		    select: function (event, ui) {},
 	 		    minLength: 1,
 	 		    delay: 100,
 	 		    autoFocus: true,
@@ -370,7 +369,6 @@
 		function selectAll(order, desc, cpage) {
 			
 			$('#resetBtn').click();
-			clearTable();
 
 			$.ajax({
 				
@@ -382,10 +380,9 @@
 					// 검색 결과 처리
 					setList(map);
 					
-					if(map.list.length != 0) {
-						// 페이징 처리
-						pagination(map);
-					}
+					// 페이징 처리
+					pagination(map);
+
 				},
 				error : function() {
 					console.log('selectAll AJAX 오류');
@@ -396,31 +393,25 @@
 		
 		// 검색
 		function searchStaff(order, desc, cpage) {
-			
+			// 추가기술 필수 체크 시, 추가기술 입력했는지 확인
 			checkSkills();
-			
-			clearTable();
-			
+
 			setGraduateDay();
 			setJuminNo();
 			setCpage(cpage);
 			setOrder(order);
 			setDesc(desc);
-			
-			
-			
+
 			$.ajax({
 				url : 'searchStaff.do',
 				type : 'post',
 				data : $('#searchConditionForm').serialize(),
 				success : function(map) {
-					map.str =  'searchStaff';
+					map.str = 'searchStaff';
 					// 검색 결과 처리
 					setList(map);
-					if(map.list.length != 0) {
-						// 페이징 처리
-						pagination(map);
-					}
+					// 페이징 처리
+					pagination(map);
 				},
 				error : function() {
 					console.log('searchStaff AJAX 오류');
@@ -486,6 +477,7 @@
 				
 			}
 			else {
+				$('#listCount').text('');
 				str += '<tr><td colspan="6">조회된 결과가 없습니다.</td></tr>'
 			}
 			$('#listTable tbody').html(str);
@@ -494,39 +486,41 @@
 		
 		// 페이징 처리
 		function pagination(map) {
-
-			let method = '';
-			method += map.str + "('" + map.orderCondition + "','" + map.desc + "',";
-			
 			let pageStr = '';
-			// 첫 페이지 버튼
-			pageStr += '<a href="#" onclick="' + method + '1);return false">처음</a>&nbsp;';
-			// pageStr += `<a href="#" onclick="${map.str}(${map.orderCondition}, ${map.desc}, 1); return false">처음</a>`;
-			// 이전페이지 버튼
-			if(map.pi.startPage < map.pi.pageLimit) {
-				pageStr += '<a href="#" onclick="return false">&lt;</a>&nbsp;';	
-			}
-			else {
-				pageStr += '<a href="#" onclick="'  + method +  (pi.startPage - 1)  + ');return false">&lt;</a>&nbsp;';				
-			}
-			// 페이지 버튼
-			for(var i = map.pi.startPage; i <= map.pi.endPage; i++) {
-				if(i != map.pi.currentPage) {
-					pageStr += '<a href="" onclick="'  + method +  i + ');return false">' + i + '</a>&nbsp;';
+			
+			if(map.list.length > 0) { // 검색 결과가 있을때만 페이지 생성
+				let method = '';
+				method += map.str + "('" + map.orderCondition + "','" + map.desc + "',";
+				
+				// 첫 페이지 버튼
+				pageStr += '<a href="#" onclick="' + method + '1);return false">처음</a>&nbsp;';
+				// pageStr += `<a href="#" onclick="${map.str}(${map.orderCondition}, ${map.desc}, 1); return false">처음</a>`;
+				// 이전페이지 버튼
+				if(map.pi.startPage < map.pi.pageLimit) {
+					pageStr += '<a href="#" onclick="return false">&lt;</a>&nbsp;';	
 				}
 				else {
-					pageStr += '<a href="" onclick="'  + method +  i + ');return false">[' + i + ']</a>&nbsp;';
+					pageStr += '<a href="#" onclick="'  + method +  (pi.startPage - 1)  + ');return false">&lt;</a>&nbsp;';				
 				}
-			}
-			// 다음페이지 버튼
-			if(map.pi.maxPage == map.pi.endPage) {
-				pageStr += '<a href="" onclick="return false">&gt;</a>&nbsp;';	
-			}
-			else {
-				pageStr += '<a href="" onclick="'  + method + (map.pi.endPage + 1)  + ');return false">&gt;</a>&nbsp;';				
-			}
-			// 마지막 페이지 버튼
-			pageStr += '<a href="" onclick="'  + method + map.pi.maxPage + ');return false">끝</a>&nbsp;';
+				// 페이지 버튼
+				for(var i = map.pi.startPage; i <= map.pi.endPage; i++) {
+					if(i != map.pi.currentPage) {
+						pageStr += '<a href="" onclick="'  + method +  i + ');return false">' + i + '</a>&nbsp;';
+					}
+					else {
+						pageStr += '<a href="" onclick="'  + method +  i + ');return false">[' + i + ']</a>&nbsp;';
+					}
+				}
+				// 다음페이지 버튼
+				if(map.pi.maxPage == map.pi.endPage) {
+					pageStr += '<a href="" onclick="return false">&gt;</a>&nbsp;';	
+				}
+				else {
+					pageStr += '<a href="" onclick="'  + method + (map.pi.endPage + 1)  + ');return false">&gt;</a>&nbsp;';				
+				}
+				// 마지막 페이지 버튼
+				pageStr += '<a href="" onclick="'  + method + map.pi.maxPage + ');return false">끝</a>&nbsp;';
+			} 
 			
 			// 영역에 추가
 			$('#pageArea').html(pageStr);
@@ -571,7 +565,8 @@
 	   	// 추가기술 삭제
 	   	function removeSkill(e) {
 	   		let skills = $(e).siblings();
-	   		let skillInput = $('#addSkillInput input[value=' + $(e).text() + ']').siblings();
+	   		let skillInput = $('#addSkillInput input[value="' + $(e).text() + '"]').siblings();
+	   		
 	   		$('#addSkills').html(skills);
 	   		$('#addSkillInput').html(skillInput);
 	   		inSkill.splice(inSkill.indexOf($(e).text()), 1);

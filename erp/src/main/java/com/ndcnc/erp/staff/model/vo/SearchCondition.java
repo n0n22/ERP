@@ -17,9 +17,14 @@ public class SearchCondition {
 	
 	private int cpage; // 현재페이지
 	
-	private List<String> skill_name2;
-	private String skillCondition;
-	private String orderCondition;
-	private String desc;
+	private List<String> skill_name2;	// 추가기술
+	private String skillCondition;		// 필수 여부
+	
+	private String orderCondition;		// 정렬 조건
+	private String desc;				// 오름,내림차순
 	
 }
+
+
+
+

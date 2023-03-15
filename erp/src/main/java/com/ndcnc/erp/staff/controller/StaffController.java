@@ -33,12 +33,14 @@ public class StaffController {
 	@RequestMapping("staffInput.do")
 	public ModelAndView inputStaff(@ModelAttribute Staff newStaff, ModelAndView mv) {
 		
-		if(staffService.inputStaff(newStaff) >= 2) {
+		if(newStaff.getSkill_name() != null && staffService.inputStaff(newStaff) >= 2) {
+			mv.addObject("alertMsg", "등록되었습니다.").setViewName("staff_input_form");
+		} else if (staffService.inputStaffOnly(newStaff) > 0) {
 			mv.addObject("alertMsg", "등록되었습니다.").setViewName("staff_input_form");
 		} else {
-			mv.addObject("alertMsg", "등록에 실패하였습니다.");
+			mv.addObject("alertMsg", "사원 등록을 실패했습니다.").setViewName("staff_input_form");			
 		}
-	
+
 		return mv;
 	}
 	

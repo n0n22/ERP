@@ -124,7 +124,7 @@
                 </table>
                 <div class="button-area">
                     <button type="button" class="btn btn-sm btn-outline-secondary" onclick="inputSubmit();">등록</button>
-                    <button type="reset" class="btn btn-sm btn-outline-secondary">초기화</button>
+                    <button type="reset" class="btn btn-sm btn-outline-secondary" onclick="resetSkill();">초기화</button>
                 </div>
 				<div id="addSkillInput">
 				
@@ -155,16 +155,17 @@
 			// 주민등록번호 확인
 			$('#jumin_no1').focusout(function() {
 				var regExp1 = /\d{2}([0]\d|[1][0-2])([0][1-9]|[1-2]\d|[3][0-1])/;
-			
-				if(!regExp1.test($('#jumin_no1').val())) {
+				
+				if($('#jumin_no1').val() != '' && !regExp1.test($('#jumin_no1').val())) {
 					alert('잘못된 주민등록번호입니다.');
 				}
+				
 			});
 			
 			$('#jumin_no2').focusout(function() {
 				var regExp2 = /[1-4]\d{6}/;
 				
-				if(!regExp2.test($('#jumin_no2').val())) {
+				if($('#jumin_no1').val() != '' && !regExp2.test($('#jumin_no2').val())) {
 					alert('잘못된 주민등록번호입니다.');
 				}
 			});
@@ -270,6 +271,15 @@
 			inSkill.splice(inSkill.indexOf($(e).text()), 1);
     	}
     	
+    	
+    	// 추가기술 초기화
+    	function resetSkill() {
+			inSkill = [];
+			
+			$('#addSkillInput').html('');
+			$('#addSkills').html('');	
+    	}
+    	
    		
    		
    		
@@ -320,39 +330,14 @@
 			return true;       			
    		};
    		
-   		
-   		
-   		// 기술 선택 확인
-		function checkSkill() {
-   			
-    		let flag = 0;
-    		
-    		$('.skillCheckbox').each(function() {
-   				if($(this).is(':checked')) {
-   					flag++;
-   				}        	
-    		});
-   			
-    		if(flag == 0) {
-				alert('기술을 선택해주세요.');        			
-    			return false;
-    		}
-    		
-    		return true;
-   		};
-   		
-   	    
     	// 졸업년월 확인 및 추출
    		function graduateDateCheck() {
-
    			let graduateDay = '';
    			graduateDay += $('#year option:selected').val() + '/' + $('#month option:selected').val();
-   			
    			if(graduateDay.length < 7) {
    				alert('졸업일을 선택해주세요');
    				return false;
    			}
-   			
    			$('#graduateDay').val(graduateDay);
    			return true;
     	};
@@ -363,7 +348,8 @@
     	
     	// 조건 확인 후 form 태그 submit
     	function inputSubmit() {
-    		let flag = checkName() && checkJumin() && checkDepartment() && checkSchool() && checkSkill() && graduateDateCheck();
+    		let flag = checkName() && checkJumin() && checkDepartment() && 
+    		           checkSchool() && graduateDateCheck();
     		
     		// 확인 완료 - 요청 보내기
     		if(flag && confirm('저장하시겠습니까?')) {

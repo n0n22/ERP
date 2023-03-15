@@ -63,7 +63,7 @@
 		   ON (C.SKILL_NAME = S.SKILL_NAME)
 		 WHEN NOT MATCHED THEN
 		      INSERT 
-		      VALUES(CODE_SKILL_SEQ, S.SKILL_NAME)
+		      VALUES((select max(skill_code)+1 from code_skill), S.SKILL_NAME)
 	</update>
     
     <!-- 사원 등록 - STAFF-SKILL 테이블 -->

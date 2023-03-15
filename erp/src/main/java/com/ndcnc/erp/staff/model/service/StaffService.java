@@ -22,12 +22,17 @@ public class StaffService {
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 	
-	// 사원 등록 
+	// 사원 등록 - 기술 있을때
 	@Transactional
 	public int inputStaff(Staff newStaff) {
 		return staffDao.insertStaff(newStaff, sqlSession)
 				+ staffDao.updateSkill(newStaff.getSkill_name(), sqlSession)
 				+ staffDao.insertStaffSkill(newStaff, sqlSession);
+	}
+	
+	// 사원 등록 - 기술 없을 때
+	public int inputStaffOnly(Staff newStaff) {
+		return staffDao.insertStaff(newStaff, sqlSession);
 	}
 	
 	// 사원 전체 목록 개수

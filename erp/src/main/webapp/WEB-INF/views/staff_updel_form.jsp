@@ -144,10 +144,7 @@
    	<!-- 등록 후 확인 창 띄우기 -->
    	<c:if test="${not empty alertMsg}">
    		<script>
-   			if(confirm('${ alertMsg }')) {
-    			window.close();       				
-   			};
-   			
+   			alert('${ alertMsg}');
    		</script>
    	</c:if>
     
@@ -398,28 +395,7 @@
    			}
 			return true;       			
    		};
-   		
-   		
-   		
-   		// 기술 선택 확인
-		function checkSkill() {
-   			
-    		let flag = 0;
-    		
-    		$('.skillCheckbox').each(function() {
-   				if($(this).is(':checked')) {
-   					flag++;
-   				}        	
-    		});
-   			
-    		if(flag == 0) {
-				alert('기술을 선택해주세요.');        			
-    			return false;
-    		}
-    		
-    		return true;
-   		};
-   		
+   	
    	    
     	// 졸업년월 확인 및 추출
    		function graduateDateCheck() {
@@ -442,7 +418,8 @@
     	
     	// 조건 확인 후 form 태그 submit
     	function updateFormSubmit() {
-    		let flag = checkName() && checkJumin() && checkDepartment() && checkSchool() && checkSkill() && graduateDateCheck();
+    		let flag = checkName() && checkJumin() && checkDepartment() && 
+    		           checkSchool() && graduateDateCheck();
     		
     		// 확인 완료 - 요청 보내기
     		if(flag) {
