@@ -23,6 +23,46 @@ public class StaffController {
 	@Autowired
 	private StaffService staffService;
 	
+	
+	
+	/*
+	
+ 	-------------------------------- 기술 필수일 때 --------------------------------
+	
+	// 사원 등록
+	@RequestMapping("staffInput.do")
+	public ModelAndView inputStaff(@ModelAttribute Staff newStaff, ModelAndView mv) {
+		
+		if(staffService.inputStaff(newStaff) >= 2) {
+			mv.addObject("alertMsg", "등록되었습니다.").setViewName("staff_input_form");
+		} else {
+			mv.addObject("alertMsg", "등록에 실패하였습니다.");
+		}
+	
+		return mv;
+	}
+	
+	
+		
+	// 사원 정보 수정
+	@RequestMapping("updateStaff.do")
+	public ModelAndView updateStaff(@ModelAttribute Staff staff, ModelAndView mv) {
+		
+		if(staffService.updateStaff(staff) > 0) {
+			mv.addObject("staff", staffService.selectStaffInfo(staff.getStaff_no())).addObject("alertMsg", "수정이 완료되었습니다.");
+		} else {
+			mv.addObject("alertMsg", "수정 실패!");
+		};
+		
+		mv.setViewName("staff_updel_form");
+		return mv;
+	}
+	
+	*/
+	
+	
+	
+	
 	// 등록 페이지로 이동
 	@RequestMapping("staffInputForm.do")
 	public String inputStaffForm() {
