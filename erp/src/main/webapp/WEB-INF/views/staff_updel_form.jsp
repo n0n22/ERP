@@ -342,7 +342,7 @@
     	function removeSkill(e) {
     		
     		let skills = $(e).siblings();
-    		let skillInputs = $('#addSkillInput input[value=' + $(e).text() + ']').siblings();
+    		let skillInputs = $('#addSkillInput input[value="' + $(e).text() + '"]').siblings();
     		$('#addSkills').html(skills);
     		$('#addSkillInput').html(skillInputs);
 			inSkill.splice(inSkill.indexOf($(e).text()), 1);
