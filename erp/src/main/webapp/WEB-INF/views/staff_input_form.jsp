@@ -205,14 +205,8 @@
 	 		
 			// 자동완성
 	 		$('#skillInputAuto').autocomplete({
-	 		    source: addSkills,
-	 		    focus: function (event, ui) {
-	 		    	return false;
-	 		    },
-	 		    select: function (event, ui) {},
-	 		    minLength: 1,
-	 		    delay: 100,
-	 		    autoFocus: true,
+	 			source: addSkills,
+	 		    autoFocus: true
 	 		});
 	 		
 	 	}
@@ -308,7 +302,6 @@
 			
 			return true;
 		}
-   		
    		
    		// 	부서 선택 확인
    		function checkDepartment() {

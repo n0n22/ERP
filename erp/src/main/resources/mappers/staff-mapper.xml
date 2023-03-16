@@ -291,8 +291,8 @@
 		from
 				staff S
 		join code_department D on(S.department_code = D.department_code)
-		join staff_skill SS on(S.staff_no = SS.staff_no)
-		join code_skill CS on(SS.skill_code = CS.skill_code)
+		left join staff_skill SS on(S.staff_no = SS.staff_no)
+		left join code_skill CS on(SS.skill_code = CS.skill_code)
 		join code_school CC on(S.school_code = CC.school_code)
 	
 	 -->
@@ -323,19 +323,7 @@
 	<!-- 사원 정보 수정 -->
 	<update id="updateStaff" parameterType="staff">
 		UPDATE 
-		       (
-				select
-						S.STAFF_NO,
-						S.STAFF_NAME,
-						S.JUMIN_NO,
-						S.DEPARTMENT_CODE,
-						S.SCHOOL_CODE,
-						S.GRADUATE_DAY
-				  from
-						staff S
-						join code_department D on(S.department_code = D.department_code)
-						join code_school CC on(S.school_code = CC.school_code)
-			   )
+		       STAFF
 		   SET
 			   STAFF_NAME = #{staff_name},
 			   JUMIN_NO = #{jumin_no},
@@ -346,7 +334,30 @@
 	           STAFF_NO = #{staff_no}
 	</update>
 	
-	
+	<!-- 사원 스킬 정보 새로 입력 -->
+	<insert id="insertNewStaffSkill" parameterType="staff">
+    	INSERT
+    	  INTO
+    	       STAFF_SKILL
+		       (
+		       STAFF_SKILL_NO
+			   ,STAFF_NO
+			   ,SKILL_CODE
+		       )
+			  SELECT
+				       STAFF_SKILL_SEQ.NEXTVAL,
+				       A.* 
+				  FROM 
+				       (
+					    <foreach item="item" collection="skill_name" separator="UNION ALL " >
+					        select 
+					               #{staff_no}
+					               ,(select skill_code from code_skill where skill_name = #{ item })
+					          from 
+					               dual
+					    </foreach>
+			           ) A
+    </insert>
 	
 	
 	<!-- 사원 스킬 삭제 -->

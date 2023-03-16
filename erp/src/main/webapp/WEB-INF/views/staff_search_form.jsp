@@ -307,12 +307,7 @@
 			// 자동완성
 	 		$('#skillInputAuto').autocomplete({
 	 		    source: addSkills,
-	 		    focus: function (event, ui) {
-	 		    	return false;
-	 		    },
-	 		    minLength: 1,
-	 		    delay: 100,
-	 		    autoFocus: true,
+	 		    autoFocus: true
 	 		});
 	 		
 	 	}
@@ -500,7 +495,7 @@
 					pageStr += '<a href="#" onclick="return false">&lt;</a>&nbsp;';	
 				}
 				else {
-					pageStr += '<a href="#" onclick="'  + method +  (pi.startPage - 1)  + ');return false">&lt;</a>&nbsp;';				
+					pageStr += '<a href="#" onclick="'  + method +  (map.pi.startPage - 1)  + ');return false">&lt;</a>&nbsp;';				
 				}
 				// 페이지 버튼
 				for(var i = map.pi.startPage; i <= map.pi.endPage; i++) {

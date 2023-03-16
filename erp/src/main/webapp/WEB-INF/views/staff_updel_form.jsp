@@ -144,7 +144,14 @@
    	<!-- 등록 후 확인 창 띄우기 -->
    	<c:if test="${not empty alertMsg}">
    		<script>
-   			alert('${ alertMsg}');
+   			alert('${alertMsg}');
+   		</script>
+   	</c:if>
+    <!-- 등록 후 확인 창 띄우고 닫기 -->
+   	<c:if test="${not empty deleteAlertMsg}">
+   		<script>
+   			alert('${deleteAlertMsg}');
+   			window.close();
    		</script>
    	</c:if>
     
@@ -153,8 +160,7 @@
 
 		// 페이지 로딩 시 실행
 		$(function() {
-			
-			
+		
 			// 주민등록번호 확인
 			$('#jumin_no1').focusout(function() {
 				
@@ -207,25 +213,28 @@
 			// 조회한 기술 입력
 			var skills = [];
 			skills = '${staff.skill_name}';
-			skills = skills.replace('[', '');
-			skills = skills.replace(']', '');
-			var skillList = skills.split(', '); 
-
-			
-			var basicSkills = ['Java', 'JSP', 'ASP', 'PHP', 'Delphi'];
-			var addSkillList = [];
-			for(var i = 0; i < skillList.length; i++) {
-				if(basicSkills.indexOf(skillList[i]) > -1) {
-					$('input[value=' + skillList[i] + ']').attr('checked', true);
+			if(skills != '[]') {
+				skills = skills.replace('[', '');
+				skills = skills.replace(']', '');
+				var skillList = skills.split(', '); 
+	
+				
+				var basicSkills = ['Java', 'JSP', 'ASP', 'PHP', 'Delphi'];
+				var addSkillList = [];
+				for(var i = 0; i < skillList.length; i++) {
+					if(basicSkills.indexOf(skillList[i]) > -1) {
+						$('input[value=' + skillList[i] + ']').attr('checked', true);
+					}
+					else {					
+						addSkillList.push(skillList[i]);
+					}
 				}
-				else {					
-					addSkillList.push(skillList[i]);
+				
+				console.log(addSkillList.length);
+				for(var i = 0; i < addSkillList.length; i++) {
+		    		$('#addSkills').append('<button type="button"  class="btn btn-sm btn-light" onclick="removeSkill(this);">' + addSkillList[i] + '</button>');
+		    		$('#addSkillInput').append('<input type="hidden" name="skill_name" value="' + addSkillList[i] + '">');
 				}
-			}
-
-			for(var i = 0; i < addSkillList.length; i++) {
-	    		$('#addSkills').append('<button type="button"  class="btn btn-sm btn-light" onclick="removeSkill(this);">' + addSkillList[i] + '</button>');
-	    		$('#addSkillInput').append('<input type="hidden" name="skill_name" value="' + addSkillList[i] + '">');
 			}
 			
 			// 조회한 졸업년도 입력
@@ -279,14 +288,8 @@
 	 		
 			// 자동완성
 	 		$('#skillInputAuto').autocomplete({
-	 		    source: addSkills,
-	 		    focus: function (event, ui) {
-	 		    	return false;
-	 		    },
-	 		    select: function (event, ui) {},
-	 		    minLength: 1,
-	 		    delay: 100,
-	 		    autoFocus: true,
+	 			source: addSkills,
+	 		    autoFocus: true
 	 		});
 	 		
 	 	}

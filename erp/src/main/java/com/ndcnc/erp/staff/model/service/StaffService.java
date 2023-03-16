@@ -60,12 +60,20 @@ public class StaffService {
 		return staffDao.selectStaffInfo(staff_no, sqlSession);
 	}
 	
-	// 사원 정보 수정
+	// 사원 정보 수정 - 기술이 있을 때
 	@Transactional
 	public int updateStaff(Staff staff) {
 		return staffDao.updateStaff(staff, sqlSession)
-				* staffDao.deleteStaffSkills(staff.getStaff_no(), sqlSession)
-				* staffDao.insertStaffSkill(staff, sqlSession);
+				+ staffDao.deleteStaffSkills(staff.getStaff_no(), sqlSession)
+				+ staffDao.updateSkill(staff.getSkill_name(), sqlSession)
+				+ staffDao.insertNewStaffSkill(staff, sqlSession);
+	}
+	
+	// 사원 정보 수정 - 기술이 없을 때
+	@Transactional
+	public int updateStaffInfo(Staff staff) {
+		return staffDao.updateStaff(staff, sqlSession)
+				+ staffDao.deleteStaffSkills(staff.getStaff_no(), sqlSession);
 	}
 	
 	// 사원 정보 삭제

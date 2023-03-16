@@ -33,14 +33,21 @@ public class StaffController {
 	@RequestMapping("staffInput.do")
 	public ModelAndView inputStaff(@ModelAttribute Staff newStaff, ModelAndView mv) {
 		
-		if(newStaff.getSkill_name() != null && staffService.inputStaff(newStaff) >= 2) {
-			mv.addObject("alertMsg", "등록되었습니다.").setViewName("staff_input_form");
-		} else if (staffService.inputStaffOnly(newStaff) > 0) {
-			mv.addObject("alertMsg", "등록되었습니다.").setViewName("staff_input_form");
-		} else {
-			mv.addObject("alertMsg", "사원 등록을 실패했습니다.").setViewName("staff_input_form");			
+		if(newStaff.getSkill_name() != null) { // 기술이 있을 때
+			if(staffService.inputStaff(newStaff) >= 2) {
+				mv.addObject("alertMsg", "등록되었습니다.");
+			} else {
+				mv.addObject("alertMsg", "사원 등록을 실패했습니다.");			
+			}
+		} else { // 기술이 없을 때
+			if (staffService.inputStaffOnly(newStaff) > 0) {
+				mv.addObject("alertMsg", "등록되었습니다.");
+			} else {
+				mv.addObject("alertMsg", "사원 등록을 실패했습니다.");			
+			}
 		}
-
+		
+		mv.setViewName("staff_input_form");
 		return mv;
 	}
 	
@@ -88,8 +95,9 @@ public class StaffController {
 	// 수정,삭제 페이지 이동
 	@RequestMapping("staffUpdelForm.do")
 	public ModelAndView selectStaff(@RequestParam int staff_no, ModelAndView mv) {
-		// 사원 정보 조회 후 들고 등록 페이지로 이동
-		mv.addObject("staff", staffService.selectStaffInfo(staff_no)).setViewName("staff_updel_form");		
+		// 사원 정보 조회 후 들고 페이지로 이동
+		Staff staff = staffService.selectStaffInfo(staff_no);
+		mv.addObject("staff", staff).setViewName("staff_updel_form");		
 		return mv;
 	}
 	
@@ -97,13 +105,23 @@ public class StaffController {
 	// 사원 정보 수정
 	@RequestMapping("updateStaff.do")
 	public ModelAndView updateStaff(@ModelAttribute Staff staff, ModelAndView mv) {
-		
-		if(staffService.updateStaff(staff) > 0) {
-			mv.addObject("staff", staffService.selectStaffInfo(staff.getStaff_no())).addObject("alertMsg", "수정이 완료되었습니다.");
-		} else {
-			mv.addObject("alertMsg", "수정 실패!");
-		};
-		
+
+		if(staff.getSkill_name() != null) { // 기술이 있을 때
+			if(staffService.updateStaff(staff) > 0) {
+				// 정보수정 + 기존 기술 삭제 후 업데이트
+				mv.addObject("staff", staffService.selectStaffInfo(staff.getStaff_no())).addObject("alertMsg", "수정이 완료되었습니다.");			
+			} else {
+				mv.addObject("alertMsg", "수정 실패!");	
+			}
+		} else { // 기술이 없을 때
+			if (staffService.updateStaffInfo(staff) > 0) {
+				// 정보수정 + 기존 기술 삭제
+				mv.addObject("staff", staffService.selectStaffInfo(staff.getStaff_no())).addObject("alertMsg", "수정이 완료되었습니다.");			
+			} else {
+				mv.addObject("alertMsg", "수정 실패!");	
+			}
+		} 
+	
 		mv.setViewName("staff_updel_form");
 		return mv;
 	}
@@ -114,9 +132,9 @@ public class StaffController {
 	public ModelAndView updateStaff(@RequestParam int staff_no, ModelAndView mv) {
 		
 		if(staffService.deleteStaff(staff_no) > 0) {
-			mv.addObject("alertMsg", "삭제되었습니다.");
+			mv.addObject("deleteAlertMsg", "삭제되었습니다.");
 		} else {
-			mv.addObject("alertMsg", "삭제 실패!");
+			mv.addObject("deleteAlertMsg", "삭제 실패!");
 		}
 		
 		mv.setViewName("staff_updel_form");

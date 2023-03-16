@@ -76,6 +76,11 @@ public class StaffDao {
 		return sqlSession.delete("staffMapper.deleteStaffSkills", staff_no);
 	}
 	
+	// 사원 새로운 기술 추가
+	public int insertNewStaffSkill(Staff newStaff, SqlSessionTemplate sqlSession) {
+		return sqlSession.insert("staffMapper.insertNewStaffSkill", newStaff);
+	}
+	
 	// 사원 정보 삭제
 	public int deleteStaff(int staff_no, SqlSessionTemplate sqlSession) {
 		return sqlSession.delete("staffMapper.deleteStaff", staff_no);
