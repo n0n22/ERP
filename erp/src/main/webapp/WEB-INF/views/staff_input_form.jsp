@@ -139,7 +139,10 @@
    	<!-- 등록 후 확인 창 띄우기 -->
    	<c:if test="${not empty alertMsg}">
    		<script>
-   			alert('${ alertMsg }');    		
+   			alert('${ alertMsg }');
+   			// 부모창의 함수 호출
+   			opener.parent.selectAll('번호', 'desc', 1);
+   			// opener.parent.location='/erp';
    			window.close();
    		</script>
    	</c:if>
@@ -150,7 +153,7 @@
 	
 		// 페이지 로딩 시 실행
 		$(function() {
-			
+		
 			
 			// 주민등록번호 확인
 			$('#jumin_no1').focusout(function() {

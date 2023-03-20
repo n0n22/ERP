@@ -145,12 +145,16 @@
    	<c:if test="${not empty alertMsg}">
    		<script>
    			alert('${alertMsg}');
+			// 부모창의 함수 호출
+			opener.parent.selectAll('번호', 'desc', 1);
    		</script>
    	</c:if>
     <!-- 등록 후 확인 창 띄우고 닫기 -->
    	<c:if test="${not empty deleteAlertMsg}">
    		<script>
    			alert('${deleteAlertMsg}');
+   			// 부모창의 함수 호출
+   			opener.parent.selectAll('번호', 'desc', 1);
    			window.close();
    		</script>
    	</c:if>

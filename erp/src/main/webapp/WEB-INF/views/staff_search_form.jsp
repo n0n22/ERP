@@ -389,6 +389,7 @@
 		// 검색
 		function searchStaff(order, desc, cpage) {
 			// 추가기술 필수 체크 시, 추가기술 입력했는지 확인
+			
 			checkSkills();
 
 			setGraduateDay();
