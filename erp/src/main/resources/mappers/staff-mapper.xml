@@ -20,7 +20,7 @@
 		<result column="DEPARTMENT_NAME" property="department_name" />
 		<result column="GRADUATE_DAY" property="graduate_day" />
 		<result column="SCHOOL_NAME" property="school_name" />
-		<collection column="SKILL_NAME" property="skill_name" ofType="string" javaType="list">
+		<collection property="skill_name" ofType="string" javaType="list">
 			<result column="SKILL_NAME" property="skill_name" />
 		</collection>
 	</resultMap>
