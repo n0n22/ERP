@@ -161,6 +161,11 @@
     
     
 	<script>
+	
+	
+		// 추가기술 중복확인을 위한 배열
+		var inSkill = [];
+		
 
 		// 페이지 로딩 시 실행
 		$(function() {
@@ -225,6 +230,7 @@
 				
 				var basicSkills = ['Java', 'JSP', 'ASP', 'PHP', 'Delphi'];
 				var addSkillList = [];
+				// 가지고있는 기본기술일 경우 체크
 				for(var i = 0; i < skillList.length; i++) {
 					if(basicSkills.indexOf(skillList[i]) > -1) {
 						$('input[value=' + skillList[i] + ']').attr('checked', true);
@@ -233,9 +239,9 @@
 						addSkillList.push(skillList[i]);
 					}
 				}
-				
-				console.log(addSkillList.length);
+				// 가지고있는 추가기술일 경우 버튼 생성
 				for(var i = 0; i < addSkillList.length; i++) {
+					inSkill.push(addSkillList[i]);
 		    		$('#addSkills').append('<button type="button"  class="btn btn-sm btn-light" onclick="removeSkill(this);">' + addSkillList[i] + '</button>');
 		    		$('#addSkillInput').append('<input type="hidden" name="skill_name" value="' + addSkillList[i] + '">');
 				}
@@ -255,9 +261,6 @@
 					$(this).attr('selected', true);
 				}
 			});
-			
-			
-			
 			
 	 		// 전체 기술 목록 불러오기
 	 		var addSkills = [];
@@ -318,7 +321,7 @@
 
 		// ------------------ 추가기술 -----------------------
 		
-		var inSkill = [];
+
 		
 		// 추가기술 추가
 		function addSkill(e) {
@@ -334,7 +337,6 @@
 	    		}
 	    		else {
 	    			inSkill.push(skill); // 중복 확인을 위해 배열에 넣기
-		    		
 		    		$('#addSkills').append('<button type="button" class="btn btn-sm btn-light" onclick="removeSkill(this);">' + skill + '</button>');
 		    		$('#addSkillInput').append('<input type="hidden" name="skill_name" value="' + skill + '">');
 	    		}	    			
@@ -376,7 +378,7 @@
 			
 			let jumin_no = '';
 			jumin_no += $('#jumin_no1').val() + '-' + $('#jumin_no2').val();
-			console.log(jumin_no);
+
 			$('#juminNo').val(jumin_no);
 			
 			return true;
