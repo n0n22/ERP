@@ -13,8 +13,9 @@
 		<result column="GRADUATE_DAY" property="graduate_day" />
 	</resultMap>
 	
+	
 	<resultMap id="staffCollectionResultSet" type="staff">
-		<result column="STAFF_NO" property="staff_no" />
+		<id column="staff_no" property="staff_no"/>
 		<result column="STAFF_NAME" property="staff_name" />
 		<result column="JUMIN_NO" property="jumin_no" />
 		<result column="DEPARTMENT_NAME" property="department_name" />
@@ -24,8 +25,27 @@
 			<result column="SKILL_NAME" property="skill_name" />
 		</collection>
 	</resultMap>
+	 
 	
-	
+	<!-- 
+	<resultMap id="staffCollectionResultSet" type="staff">
+		<id column="staff_no" property="staff_no"/>
+		<result column="STAFF_NAME" property="staff_name" />
+		<result column="JUMIN_NO" property="jumin_no" />
+		<result column="DEPARTMENT_NAME" property="department_name" />
+		<result column="GRADUATE_DAY" property="graduate_day" />
+		<result column="SCHOOL_NAME" property="school_name" />
+		<collection property="skill_name" column="{staff_no=staff_no}" ofType="string" javaType="list" select="selectSkillNames">
+		</collection>
+	</resultMap>
+
+	<select id="selectSkillNames" parameterType="staff" resultType="string">
+		select skill_name
+		  from VW_STAFF_INFO
+		 where staff_no = #{staff_no}
+	</select>
+	 -->
+	 
 	
 	<!-- 사원 등록 - STAFF 테이블 -->
 	<insert id="insertStaff" parameterType="staff">
@@ -307,6 +327,17 @@
 		 WHERE
 		       STAFF_NO = #{staff_no}
 	</select>
+	
+	<!-- 사원 상세 정보 검색
+	<select id="staffCollectionResultSet" parameterType="_int" resultMap="staffCollectionResultSet">
+		SELECT
+		  	   *
+		  FROM
+		       staff
+		 WHERE
+		       STAFF_NO = #{staff_no}
+	</select>
+	-->
 	
 	<!-- 
 	<select id="selectStaffSkill" resultType="string" parameterType="_int">
