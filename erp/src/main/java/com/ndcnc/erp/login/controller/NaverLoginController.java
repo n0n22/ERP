@@ -4,19 +4,27 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ndcnc.erp.login.model.service.LoginService;
 import com.ndcnc.erp.login.model.vo.NaverLoginBO;
+import com.ndcnc.erp.login.model.vo.NaverLoginUser;
 
 
 @Controller
 public class NaverLoginController {
 	
-	// Autowired가 왜 안되지??
+	
 	private NaverLoginBO naverLoginBO = new NaverLoginBO();
+	
+	@Autowired
+	private LoginService loginService;
+	
 	
 	/*
 	@Autowired
@@ -52,7 +60,20 @@ public class NaverLoginController {
 		} else {
 			return "login_form";
 		}
-		naverLoginBO.getUserProfile(accessToken);
+		JSONObject userInfo = naverLoginBO.getUserProfile(accessToken);
+		
+		NaverLoginUser user = new NaverLoginUser((String)userInfo.get("name"),
+												 (String)userInfo.get("birthday"),
+												 (String)userInfo.get("gender"),
+												 (String)userInfo.get("mobile"));
+		
+		System.out.println("네이버로 로그인한 회원 정보 : " + user);
+		
+		// 기존에 등록했는지 확인해서 아닐 경우에만 새로 입력
+		
+		
+		
+		
 		
 		
 		return "main";

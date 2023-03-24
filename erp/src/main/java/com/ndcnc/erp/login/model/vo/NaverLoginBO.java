@@ -92,7 +92,7 @@ public class NaverLoginBO {
 	}
 	
 	// 사용자 프로필 정보 요청
-	public String getUserProfile(String accessToken) throws IOException {
+	public JSONObject getUserProfile(String accessToken) throws IOException {
 	/*
 		User-Agent: curl/7.12.1 (i686-redhat-linux-gnu) libcurl/7.12.1 OpenSSL/0.9.7a zlib/1.2.1.2 libidn/0.5.6
 		Host: openapi.naver.com
@@ -122,7 +122,7 @@ public class NaverLoginBO {
 		JSONObject jsonOb = responseToJson(responseText);
 		JSONObject userInfo = (JSONObject)jsonOb.get("response");
 		
-		return "";
+		return userInfo;
 	}
 	
 	

@@ -13,11 +13,13 @@
 	<typeAliases>
 		<typeAlias type="com.ndcnc.erp.staff.model.vo.Staff" alias="staff" />
 		<typeAlias type="com.ndcnc.erp.staff.model.vo.SearchCondition" alias="searchCondition" />
+		<typeAlias type="com.ndcnc.erp.login.model.vo.NaverLoginUser" alias="naverLoginUser" />
 	</typeAliases>
 	
 	
 	<mappers>
 		<mapper resource="/mappers/staff-mapper.xml" />
+		<mapper resource="/mappers/login-mapper.xml" />
 	
 	</mappers>
 
