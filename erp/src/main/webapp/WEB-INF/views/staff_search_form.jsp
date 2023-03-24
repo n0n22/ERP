@@ -80,9 +80,14 @@
 
 
 <body>
-
+	
+	
+	<jsp:include page="header.jsp" />
     
     <div class="outer">
+    	
+    	
+    	
 		<form action="" method="post" id="searchConditionForm">
 	        <div class="search-area">
 	            <table id="search-table" class="table table-bordered">
