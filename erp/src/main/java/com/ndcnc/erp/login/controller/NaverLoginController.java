@@ -45,11 +45,15 @@ public class NaverLoginController {
 		{개발자 센터에 등록한 콜백 URL}?state={상태 토큰}&code={인증 코드}
 	*/
 		String returnState = (String)session.getAttribute("state");
+		String accessToken = "";
 		// 내가 보낸 상태토큰과 돌아온 값이 일치하는지 비교
 		if(state.equals(returnState)) { // 일치하면 접근토큰 요청
-			naverLoginBO.getAccessToken(session, returnState, code);		
-			
-		} 
+			accessToken = naverLoginBO.getAccessToken(session, returnState, code);		
+		} else {
+			return "login_form";
+		}
+		naverLoginBO.getUserProfile(accessToken);
+		
 		
 		return "main";
 	}
