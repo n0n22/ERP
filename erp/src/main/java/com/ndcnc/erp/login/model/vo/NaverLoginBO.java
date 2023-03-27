@@ -66,7 +66,7 @@ public class NaverLoginBO {
 		
 		OAuthRequest request = new OAuthRequest(Verb.GET, PROTECTED_RESOURCE_URL);
         service.signRequest(accessToken, request);
-        
+       
         Response response = service.execute(request);
         int code = response.getCode();
         String responseText = response.getBody();
@@ -78,45 +78,7 @@ public class NaverLoginBO {
 	}
 	
 	
-	// 접근토큰 삭제
-	public String deleteAccessToken(OAuth2AccessToken accessToken) throws IOException {
-	
-	/*
-		https://nid.naver.com/oauth2.0/token?grant_type=delete
-		&client_id={클라이언트 아이디}
-		&client_secret={클라이언트 시크릿}
-		&access_token={접근 토큰}
-		&service_provider=NAVER
-	*/
-		
-		
-		
-		OAuthRequest request = new OAuthRequest(Verb.GET, );
-        service.signRequest(accessToken, request);
-        
-        Response response = service.execute(request);
-        int code = response.getCode();
-        String responseText = response.getBody();
-        
-		JSONObject jsonOb = responseToJson(responseText);
-		JSONObject userInfo = (JSONObject)jsonOb.get("response");
-		
-		
-		BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-		String responseText = br.readLine();
-		
-		br.close();
-		urlConnection.disconnect();
-		
-		System.out.println(responseText);
-		JSONObject jsonOb = responseToJson(responseText);
-		String result = (String)jsonOb.get("result");
-		
-		return result;
-	}
-	
-	
-	
+
 	
 	
 	
@@ -267,7 +229,7 @@ public class NaverLoginBO {
 	*/
 	
 	
-	/*
+	
 	// 접근토큰 삭제
 	public String deleteAccessToken(String accessToken) throws IOException {
 	
@@ -292,13 +254,13 @@ public class NaverLoginBO {
 		br.close();
 		urlConnection.disconnect();
 		
-		System.out.println(responseText);
+		// System.out.println(responseText);
 		JSONObject jsonOb = responseToJson(responseText);
 		String result = (String)jsonOb.get("result");
 		
 		return result;
 	}
-	*/
+
 	
 	
 	

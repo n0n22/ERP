@@ -101,7 +101,7 @@ public class NaverLoginController {
 		if(session.getAttribute("accessToken") != null) {
 			OAuth2AccessToken accessToken = (OAuth2AccessToken)session.getAttribute("accessToken");
 			
-			if(naverLoginBO.deleteAccessToken(accessToken).equals("success")) {
+			if(naverLoginBO.deleteAccessToken(accessToken.getAccessToken()).equals("success")) {
 				
 				session.setAttribute("loginUser", null);
 				session.setAttribute("accessToken", null);
