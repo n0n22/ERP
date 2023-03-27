@@ -18,11 +18,25 @@
 	
 		<div>
 			<form>
-			
-				<input type="text" name="user_id">
+				<table>
+					<tr>
+						<td>
+							<input type="text" name="user_id">
+						</td>
+						<td rowspan="2">
+							<button type="submit">로그인</button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="text" name="user_pwd">					
+						</td>
+					</tr>
+				</table>
+				
 				<br>
-				<input type="text" name="user_pwd">
-				<button type="submit">로그인</button>
+				
+				
 			</form>
 		</div>
 		<div>

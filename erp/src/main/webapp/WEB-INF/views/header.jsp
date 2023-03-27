@@ -8,13 +8,33 @@
 <title>Insert title here</title>
 </head>
 <body>
+	
+	<c:choose>
+		<c:when test="${ not empty loginUser }">
+			<div>
+				<span>${loginUser.name}님 환영합니다.</span>
+			</div>
+			<div>
+				<a href="logout.do">로그아웃</a>
+				<c:if test="${ not empty accessToken }">
+					<a href="deleteNaverLogin.do">네이버 연동 해제</a>
+				</c:if>
+			</div>
+		</c:when>
+		<c:otherwise>
+			<div>
+				<a href="loginForm">로그인하기</a>	
+			</div>
+		</c:otherwise>
+	</c:choose>
 
-
-	<div>
-		<a href="loginForm">로그인하기</a>	
-	</div>
-
-
+	
+	<c:if test="${not empty alertMsg}">
+		<script>
+			alert('${alertMsg}');
+		</script>
+		<c:remove var="alertMsg" scope="session" />
+	</c:if>
 
 
 </body>

@@ -23,6 +23,6 @@
 	
 	<context:component-scan base-package="com.ndcnc" />
 	
-	
+	<beans:bean id="naverLoginBO" class="com.ndcnc.erp.login.model.vo.NaverLoginBO" />
 	
 </beans:beans>
