@@ -5,7 +5,67 @@
 
 <mapper namespace="loginMapper">
 
+	<resultMap id="memberResultSet" type="member">
+		<result column="MEM_NO" property="memNo" />
+		<result column="MEM_EMAIL" property="memEmail" />
+		<result column="MEM_PW" property="memPw" />
+		<result column="MEM_NAME" property="memName" />
+		<result column="MEM_MOBILE" property="memMobile" />
+	</resultMap>
+
+	<select id="selectMemByEmail" resultType="_int">
+		SELECT
+		       count(*)
+		  FROM
+		       MEMBER
+		 WHERE
+		       MEM_EMAIL = #{memEmail}
+		   AND		        
+		       MEM_NAME = #{memName}
+	</select>
 	
+	<insert id="insertNaverLogin">
+		INSERT
+		  INTO
+		       MEMBER
+		       (
+		       MEM_NO
+			   ,MEM_EMAIL
+			   ,MEM_NAME
+			   ,MEM_MOBILE
+		       )
+		VALUES
+		       (
+		       MEM_SEQ.NEXTVAL
+		  	   ,#{memEmail}
+		  	   ,#{memName}
+		       ,#{memMobile}
+		       )
+		<selectKey resultType="int" keyProperty="memNo" order="AFTER">
+	    	select mem_no from member
+	    </selectKey> 
+	</insert>
+	
+	<select id="selectMemByMemNo" parameterType="_int" resultMap="memberResultSet">
+		SELECT
+		       MEM_NO
+			   ,MEM_EMAIL
+			   ,MEM_PW
+		       ,MEM_NAME
+			   ,MEM_MOBILE
+	      FROM
+	           MEMBER 
+		 WHERE
+		       MEM_NO = #{memNo}
+	</select>
+	
+	<delete id="deleteMember" parameterType="_int">
+		DELETE
+		  FROM
+		       MEMBER
+		 WHERE
+		       MEM_NO = #{memNo}
+	</delete>
 	
 
 </mapper>

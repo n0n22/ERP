@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.ndcnc.erp.login.model.service.LoginService;
+import com.ndcnc.erp.login.model.vo.Member;
 import com.ndcnc.erp.login.model.vo.NaverLoginBO;
-import com.ndcnc.erp.login.model.vo.NaverLoginUser;
 
 
 @Controller
@@ -38,13 +38,25 @@ public class NaverLoginController {
 	
 	// 로그인 화면으로 이동
 	// naver로 로그인 하는 사람을 위해 네이버 로그인 인증 url을 보내줌
-	@RequestMapping("/loginForm")
+	@RequestMapping("/login")
 	public String loginForm(HttpSession session, Model model) throws IOException {
 		
 		String url =  naverLoginBO.getAuthenticationRequest(session);
 		model.addAttribute("url", url);
+		session.setAttribute("flag", "naverLogin");
 		
 		return "login_form";
+	}
+	
+	// 회원가입 화면으로 이동
+	@RequestMapping("/signIn")
+	public String signIn_select(HttpSession session, Model model) throws IOException {
+		
+		String url =  naverLoginBO.getAuthenticationRequest(session);
+		model.addAttribute("url", url);
+		session.setAttribute("flag", "naverSignIn");
+		
+		return "signIn_select";
 	}
 	
 	
@@ -63,17 +75,59 @@ public class NaverLoginController {
 			return "login_form";
 		}
 		JSONObject userInfo = naverLoginBO.getUserProfile(accessToken);
-		NaverLoginUser user = new NaverLoginUser((String)userInfo.get("name"),
-												 (String)userInfo.get("birthday"),
-												 (String)userInfo.get("gender"),
-												 (String)userInfo.get("mobile"));
+		System.out.println(userInfo);
 		
-		System.out.println("네이버로 로그인한 회원 정보 : " + user);
+		Member mem = new Member();
+		mem.setMemEmail((String)userInfo.get("email"));
+		mem.setMemMobile((String)userInfo.get("mobile"));
+		mem.setMemName((String)userInfo.get("name"));
 		
-		session.setAttribute("loginUser", user);		
+		int memNo = loginService.selectMemByEmail(mem);
+		System.out.println(memNo);
 		
-		return "redirect:/";
+		String flag = (String)session.getAttribute("flag");
+		session.setAttribute("flag", null);
+
+		if(flag.equals("naverLogin")) { // 로그인일때
+			
+			if(memNo != 0) { // 조회된 회원 - 정상로그인
+				Member loginMember = loginService.selectMemByMemNo(memNo);
+				session.setAttribute("loginMember", loginMember);
+				session.setAttribute("alertMsg", "반갑습니다. " + loginMember.getMemName() + "님!");
+				return "redirect:/";
+			} else { // 조회되지 않은 회원 - 회원가입 유도
+				session.setAttribute("alertMsg", "간편가입을 진행합니다.");
+				return "redirect:/signIn";
+			}
+			
+		} else { // 회원가입일때
+			
+			if(memNo != 0) { // 조회된 회원 - 이미 가입이 되어있음
+				Member loginMember = loginService.selectMemByMemNo(memNo);
+				session.setAttribute("loginMember", loginMember);
+				session.setAttribute("alertMsg", "반갑습니다. " + loginMember.getMemName() + "님!");
+				return "redirect:/";
+			} else { // 조회되지 않은 회원 - 테이블에 등록
+				
+				memNo = loginService.insertNaverLogin(mem);
+				Member loginMember = loginService.selectMemByMemNo(memNo);
+				session.setAttribute("loginMember", loginMember);
+				session.setAttribute("alertMsg", "회원가입에 성공했습니다. 반갑습니다. " + loginMember.getMemName() + "님!");
+				return "redirect:/";
+			}
+			
+		}
+
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	@RequestMapping("/")
@@ -85,7 +139,7 @@ public class NaverLoginController {
 	@RequestMapping("/logout.do")
 	public String logout(HttpSession session) throws IOException {
 	
-		session.setAttribute("loginUser", null);
+		session.setAttribute("loginMember", null);
 		session.setAttribute("accessToken", null);
 		session.setAttribute("state", null);
 		session.setAttribute("alertMsg", "로그아웃 되었습니다.");
@@ -103,7 +157,9 @@ public class NaverLoginController {
 			
 			if(naverLoginBO.deleteAccessToken(accessToken.getAccessToken()).equals("success")) {
 				
-				session.setAttribute("loginUser", null);
+				loginService.deleteMember(((Member)session.getAttribute("loginMember")).getMemNo());
+				
+				session.setAttribute("loginMember", null);
 				session.setAttribute("accessToken", null);
 				session.setAttribute("state", null);
 				session.setAttribute("alertMsg", "네이버 로그인 연동이 해제되었습니다.");

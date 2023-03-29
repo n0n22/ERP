@@ -64,17 +64,22 @@ public class NaverLoginBO {
 	// 사용자 프로필 정보 요청
 	public JSONObject getUserProfile(OAuth2AccessToken accessToken) throws IOException, InterruptedException, ExecutionException {
 		
+		JSONObject userInfo = null; // 반환할 JSONObject
+		
 		OAuthRequest request = new OAuthRequest(Verb.GET, PROTECTED_RESOURCE_URL);
         service.signRequest(accessToken, request);
-       
+        
         Response response = service.execute(request);
         int code = response.getCode();
-        String responseText = response.getBody();
+        System.out.println(code);
+        if(code == 200) { // 응답 성공 시,
+        	String responseText = response.getBody();
+        	
+        	JSONObject jsonOb = responseToJson(responseText);
+        	userInfo = (JSONObject)jsonOb.get("response");  	
+        }
         
-		JSONObject jsonOb = responseToJson(responseText);
-		JSONObject userInfo = (JSONObject)jsonOb.get("response");
-		
-		return userInfo;
+        return userInfo;
 	}
 	
 	

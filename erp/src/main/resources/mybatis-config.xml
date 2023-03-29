@@ -13,7 +13,7 @@
 	<typeAliases>
 		<typeAlias type="com.ndcnc.erp.staff.model.vo.Staff" alias="staff" />
 		<typeAlias type="com.ndcnc.erp.staff.model.vo.SearchCondition" alias="searchCondition" />
-		<typeAlias type="com.ndcnc.erp.login.model.vo.NaverLoginUser" alias="naverLoginUser" />
+		<typeAlias type="com.ndcnc.erp.login.model.vo.Member" alias="member" />
 	</typeAliases>
 	
 	

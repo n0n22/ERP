@@ -10,9 +10,9 @@
 <body>
 	
 	<c:choose>
-		<c:when test="${ not empty loginUser }">
+		<c:when test="${ not empty loginMember }">
 			<div>
-				<span>${loginUser.name}님 환영합니다.</span>
+				<span>${loginMember.memName}님 환영합니다.</span>
 			</div>
 			<div>
 				<a href="logout.do">로그아웃</a>
@@ -23,7 +23,10 @@
 		</c:when>
 		<c:otherwise>
 			<div>
-				<a href="loginForm">로그인하기</a>	
+				<a href="login">로그인하기</a>	
+			</div>			
+			<div>
+				<a href="signIn">회원가입</a>	
 			</div>
 		</c:otherwise>
 	</c:choose>
