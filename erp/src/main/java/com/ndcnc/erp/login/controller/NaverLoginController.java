@@ -9,6 +9,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -43,7 +44,6 @@ public class NaverLoginController {
 		
 		String url =  naverLoginBO.getAuthenticationRequest(session);
 		model.addAttribute("url", url);
-		session.setAttribute("flag", "naverLogin");
 		
 		return "login_form";
 	}
@@ -54,7 +54,6 @@ public class NaverLoginController {
 		
 		String url =  naverLoginBO.getAuthenticationRequest(session);
 		model.addAttribute("url", url);
-		session.setAttribute("flag", "naverSignIn");
 		
 		return "signIn_select";
 	}
@@ -82,54 +81,34 @@ public class NaverLoginController {
 		mem.setMemMobile((String)userInfo.get("mobile"));
 		mem.setMemName((String)userInfo.get("name"));
 		
-		int memNo = loginService.selectMemByEmail(mem);
-		System.out.println(memNo);
+		int count = loginService.selectCountByEmail(mem);
 		
-		String flag = (String)session.getAttribute("flag");
-		session.setAttribute("flag", null);
-
-		if(flag.equals("naverLogin")) { // 로그인일때
-			
-			if(memNo != 0) { // 조회된 회원 - 정상로그인
-				Member loginMember = loginService.selectMemByMemNo(memNo);
-				session.setAttribute("loginMember", loginMember);
-				session.setAttribute("alertMsg", "반갑습니다. " + loginMember.getMemName() + "님!");
-				return "redirect:/";
-			} else { // 조회되지 않은 회원 - 회원가입 유도
-				session.setAttribute("alertMsg", "간편가입을 진행합니다.");
-				return "redirect:/signIn";
-			}
-			
-		} else { // 회원가입일때
-			
-			if(memNo != 0) { // 조회된 회원 - 이미 가입이 되어있음
-				Member loginMember = loginService.selectMemByMemNo(memNo);
-				session.setAttribute("loginMember", loginMember);
-				session.setAttribute("alertMsg", "반갑습니다. " + loginMember.getMemName() + "님!");
-				return "redirect:/";
-			} else { // 조회되지 않은 회원 - 테이블에 등록
-				
-				memNo = loginService.insertNaverLogin(mem);
-				Member loginMember = loginService.selectMemByMemNo(memNo);
-				session.setAttribute("loginMember", loginMember);
-				session.setAttribute("alertMsg", "회원가입에 성공했습니다. 반갑습니다. " + loginMember.getMemName() + "님!");
-				return "redirect:/";
-			}
-			
+		if(count != 0) { // 조회된 회원 - 이미 가입이 되어있음
+			Member loginMember = loginService.selectMemByEmail(mem);
+			session.setAttribute("loginMember", loginMember);
+			session.setAttribute("alertMsg", "반갑습니다. " + loginMember.getMemName() + "님!");
+			return "redirect:/";
+		} else { // 조회되지 않은 회원 - 테이블에 등록
+			session.setAttribute("mem", mem);
+			return "naverEnroll";
 		}
-
+			
 	}
 	
 	
+	@RequestMapping("/naverEnroll")
+	public String naverEnroll(@ModelAttribute Member mem, HttpSession session) {
+
+		int memNo = loginService.insertNaverLogin(mem);
+
+		Member loginMember = loginService.selectMemByEmail(mem);
+
+		session.setAttribute("loginMember", loginMember);
+		session.setAttribute("alertMsg", "회원가입에 성공했습니다. 반갑습니다. " + loginMember.getMemName() + "님!");
+		return "redirect:/";
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	@RequestMapping("/")
 	public String loginSuccess() {
 		return "staff_search_form";

@@ -12,7 +12,7 @@
 	<c:choose>
 		<c:when test="${ not empty loginMember }">
 			<div>
-				<span>${loginMember.memName}님 환영합니다.</span>
+				<span>${loginMember.memName}(${loginMember.memEmail})님 환영합니다.</span>
 			</div>
 			<div>
 				<a href="logout.do">로그아웃</a>

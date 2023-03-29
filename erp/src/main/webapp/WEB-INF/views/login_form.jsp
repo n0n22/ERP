@@ -10,6 +10,14 @@
 	<script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.2.js" charset="utf-8"></script>
   	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 
+	<style>
+		
+		img:hover {
+			cursor: pointer;
+		}
+	
+	</style>
+
 </head>
 <body>
 
@@ -47,7 +55,7 @@
 		</div>
 		<div>
 			<div class="otherButton text-center">
-				<button type ="button" class = "btn" onclick="location.href='${url}'"><img width="150px" height="40px" src='http://static.nid.naver.com/oauth/big_g.PNG'></button>	
+				<img width="150px" height="40px" src='http://static.nid.naver.com/oauth/big_g.PNG' onclick="location.href='${url}'">
 			</div>		
 		</div>
 	

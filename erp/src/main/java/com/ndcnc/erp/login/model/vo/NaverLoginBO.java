@@ -71,7 +71,7 @@ public class NaverLoginBO {
         
         Response response = service.execute(request);
         int code = response.getCode();
-        System.out.println(code);
+        // System.out.println(code);
         if(code == 200) { // 응답 성공 시,
         	String responseText = response.getBody();
         	

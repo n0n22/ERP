@@ -17,16 +17,16 @@ public class LoginService {
 	private SqlSessionTemplate sqlSession;
 
 
-	public int selectMemByEmail(Member mem) {
-		return loginDao.selectMemByEmail(mem, sqlSession);
+	public int selectCountByEmail(Member mem) {
+		return loginDao.selectCountByEmail(mem, sqlSession);
 	}
 	
 	public int insertNaverLogin(Member mem) {
 		return loginDao.insertNaverLogin(mem, sqlSession);
 	}
 	
-	public Member selectMemByMemNo(int memNo) {
-		return loginDao.selectMemByMemNo(memNo, sqlSession);
+	public Member selectMemByEmail(Member mem) {
+		return loginDao.selectMemByEmail(mem, sqlSession);
 	}
 	
 	public int deleteMember(int memNo) {

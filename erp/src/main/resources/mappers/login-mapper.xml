@@ -13,7 +13,7 @@
 		<result column="MEM_MOBILE" property="memMobile" />
 	</resultMap>
 
-	<select id="selectMemByEmail" resultType="_int">
+	<select id="selectCountByEmail" resultType="_int" parameterType="member">
 		SELECT
 		       count(*)
 		  FROM
@@ -24,7 +24,7 @@
 		       MEM_NAME = #{memName}
 	</select>
 	
-	<insert id="insertNaverLogin">
+	<insert id="insertNaverLogin" parameterType="member">
 		INSERT
 		  INTO
 		       MEMBER
@@ -41,12 +41,9 @@
 		  	   ,#{memName}
 		       ,#{memMobile}
 		       )
-		<selectKey resultType="int" keyProperty="memNo" order="AFTER">
-	    	select mem_no from member
-	    </selectKey> 
 	</insert>
 	
-	<select id="selectMemByMemNo" parameterType="_int" resultMap="memberResultSet">
+	<select id="selectMemByEmail" parameterType="member" resultMap="memberResultSet">
 		SELECT
 		       MEM_NO
 			   ,MEM_EMAIL
@@ -56,7 +53,9 @@
 	      FROM
 	           MEMBER 
 		 WHERE
-		       MEM_NO = #{memNo}
+		       MEM_EMAIL = #{memEmail}
+		   AND		        
+		       MEM_NAME = #{memName}
 	</select>
 	
 	<delete id="deleteMember" parameterType="_int">
